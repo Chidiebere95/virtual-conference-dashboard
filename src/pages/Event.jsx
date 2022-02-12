@@ -91,7 +91,7 @@ const Event = () => {
             <div
               data-id="event"
               onMouseOver={displaySubmenu}
-              onClick=""
+              
               className="submenuitems-btn flex items-center justify-center cursor-pointer  "
             >
               <FaEnvelope className=" text-lg h-16 submenuitems-btn" />

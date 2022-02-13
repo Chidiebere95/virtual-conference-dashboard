@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {  useEffect } from "react";
 import { FaBars, FaBell, FaSearch } from "react-icons/fa";
 import img from "../images/navbar/nav-img.jpg";
 import { useGlobalContext } from "../context";

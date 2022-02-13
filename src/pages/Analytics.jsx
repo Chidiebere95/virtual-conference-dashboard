@@ -32,8 +32,6 @@ import people from "../images/analytics/people.jpg";
 const Analytics = () => {
   const {
     isSubmenuOpen,
-    isSubmenuItemsOpen,
-    openSubmenu,
     closeSubmenuItems,
     openSubmenuItems,
   } = useGlobalContext();
@@ -65,12 +63,11 @@ const Analytics = () => {
     }
     
   };
-  // const container = useRef(null);
-
+  
   const [toggleDigital, setToggleDigital] = useState(false);
   const [toggleUi, setToggleUi] = useState(false);
   const [toggleFrontEnd, setToggleFrontEnd] = useState(false);
-
+  
   const handleDigital = () => {
     setToggleDigital((prevState) => !prevState);
     if (toggleUi) {
@@ -98,7 +95,20 @@ const Analytics = () => {
       setToggleDigital(false);
     }
   };
+  const frontEnd = useRef(null);
+  const frontEndContainer = useRef(null);
+  useEffect(()=>{
 
+    const frontEndContainerHeight=frontEndContainer.current.getBoundingClientRect().height
+    const frontEndHeight=frontEnd.current
+    if(toggleFrontEnd){
+      frontEndHeight.style.height=`${frontEndContainerHeight}px`
+    }
+    else{
+      frontEndHeight.style.height=`0px`
+    }
+    // console.log(frontendHeight);
+  },[toggleFrontEnd])
   return (
     <div className="mt-20 ">
       <div className="flex  relative">
@@ -1418,13 +1428,15 @@ const Analytics = () => {
                             -
                           </span>
                         </div>
-                        <div
+                        <div ref={frontEnd}
                           className={`${
                             toggleFrontEnd
                               ? "h-96 transit overflow-hidden "
                               : "h-0 overflow-hidden transit"
                           }`}
                         >
+                          <div className="" ref={frontEndContainer}>
+
                           <div className="flex mb-5  px-3 text-gray-light-2 ">
                             <h1 className="font-semibold w-36 text-left capitalize text-base">
                               {" "}
@@ -1470,6 +1482,7 @@ const Analytics = () => {
                               Southpark Station, Hamelton, CA 20155
                             </p>
                           </div>
+
                           <div className="flex mb-5  px-3 text-gray-light-2 ">
                             <h1 className="font-semibold w-36 text-left capitalize text-base">
                               {" "}
@@ -1532,6 +1545,11 @@ const Analytics = () => {
                               </a>
                             </p>
                           </div>
+                          </div>
+                         
+                        
+                          
+                         
                         </div>
                       </div>
                     </div>

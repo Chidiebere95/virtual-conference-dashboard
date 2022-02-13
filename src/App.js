@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Submenu from "./components/Submenu";
 import Event from "./pages/Event";
 import Analytics from "./pages/Analytics";
+import CreateEvent from "./pages/CreateEvent";
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
       <Navbar />
       <Submenu/>
       {/* <Event /> */}
-      <Analytics />
+      {/* <Analytics /> */}
+      <CreateEvent/>
       
     </div>
   );

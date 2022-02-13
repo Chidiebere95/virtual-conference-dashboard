@@ -7,8 +7,7 @@ const AppProvider = ({ children }) => {
   const [isSubmenuItemsOpen, setIsSubmenuItemsOpen] = useState(false);
   const [text, setText] = useState("");
   const [location, setLocation] = useState({});
-  // console.log(isSubmenuItemsOpen);
-
+  const [createEventFormData, setCreateEventFormData] = useState({});
   const openSidebar = () => {
     setIsSidebarOpen(true);
   };
@@ -16,9 +15,6 @@ const AppProvider = ({ children }) => {
     setIsSidebarOpen(false);
   };
   const openSubmenu = (text, coordinates) => {
-    // const page = sublinks.find((link) => link.page === text);
-    // setPage(page);
-    // setLocation(coordinates);
     setIsSubmenuOpen(true);
   };
   const closeSubmenu = () => {
@@ -28,12 +24,16 @@ const AppProvider = ({ children }) => {
     setLocation(position);
     setText(text)
     setIsSubmenuItemsOpen(true);
-    // console.log(location);
-    // console.log(isSubmenuItemsOpen);
   };
   const closeSubmenuItems = () => {
     setIsSubmenuItemsOpen(false);
   };
+
+  const getCreateEventFormData=(obj)=>{
+    setCreateEventFormData({...obj})
+    console.log(createEventFormData);
+  }
+
 
   return (
     <AppContext.Provider
@@ -49,6 +49,7 @@ const AppProvider = ({ children }) => {
         closeSubmenuItems,
         text,
         location,
+        getCreateEventFormData
       }}
     >
       {children}

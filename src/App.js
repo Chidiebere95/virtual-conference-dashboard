@@ -1,4 +1,4 @@
-// import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Submenu from "./components/Submenu";
@@ -11,18 +11,23 @@ import Sidebar from "./components/Sidebar";
 
 function App() {
   return (
-    <div className="relative">
-      <Navbar />
-      <Submenu/>
-      <div className="mt-20 relative flex">
-        <Sidebar/>
-      {/* <Event /> */}
-      {/* <Analytics /> */}
-      {/* <CreateEvent/> */}
-      {/* <CreateTicket/> */}
-      <Blog/>
-      </div>
+    <div>
+      <Router>
+        <Navbar />
+        <Submenu />
+        <Switch>
+          <div className="mt-20 relative flex">
+            <Sidebar />
+            <Route exact path="/" component={Event} />
+            <Route exact path="/analytics" component={Analytics} />
+            <Route exact path="/create-event" component={CreateEvent} />
+            <Route exact path="/create-ticket" component={CreateTicket} />
+            <Route exact path="/blog" component={Blog} />
+          </div>
+        </Switch>
+      </Router>
     </div>
+    
   );
 }
 

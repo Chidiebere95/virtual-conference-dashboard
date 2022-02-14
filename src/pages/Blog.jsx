@@ -110,7 +110,7 @@ const Blog = () => {
                     <div className="px-6 pb-4">
                       <div className="flex gap-x-2 items-center mb-2 ">
                         <input
-                          className="p-4 text-3xl bg-purple-light-2 text-white "
+                          className=" h-4 w-4 bg-purple-light-2 text-white "
                           type="checkbox"
                           name="check"
                           id="check"

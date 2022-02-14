@@ -488,8 +488,6 @@ const Event = () => {
                   </div>
                 </div>
               </section>
-
-              <section className="footer text-center">copyright</section>
             </div>
           </div>
         </div>

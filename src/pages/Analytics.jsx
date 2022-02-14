@@ -65,18 +65,19 @@ const Analytics = () => {
   const ui = useRef(null);
   const uiContainer = useRef(null);
   const digital = useRef(null);
-  const digitalContainer = useRef(null);
+  const digitalContainer = useRef(null); 
   useEffect(() => {
     const digitalContainerHeight =
-      frontEndContainer.current.getBoundingClientRect().height;
+      digitalContainer.current.getBoundingClientRect().height;
     const digitalHeight = digital.current;
     const uiContainerHeight =
       uiContainer.current.getBoundingClientRect().height;
     const uiHeight = ui.current;
-
     const frontEndContainerHeight =
       frontEndContainer.current.getBoundingClientRect().height;
-    const frontEndHeight = frontEnd.current;
+      const frontEndHeight = frontEnd.current;
+
+
     if (toggleDigital) {
       digitalHeight.style.height = `${digitalContainerHeight}px`;
     } else {
@@ -1428,8 +1429,8 @@ const Analytics = () => {
                 </div>
               </section>
 
-              <section className="bg-white shadow py-2 text-center">
-                copyright
+              <section className="bg-white shadow py-2 text-center text-gray-light-2">
+                copyright &copy;
               </section>
             </div>
           </div>

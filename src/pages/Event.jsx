@@ -1,19 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
-  FaArrowDown,
-  FaArrowUp,
-  FaBarcode,
-  FaChevronRight,
-  FaComment,
-  FaEnvelope,
-  FaHeart,
-  FaHome,
-  FaPencilAlt,
-  FaSignOutAlt,
   FaTimes,
   FaUser,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useGlobalContext } from "../context";
 import img1 from "../images/event/event-1.png";
 import img2 from "../images/event/event-2.png";
@@ -24,165 +14,15 @@ import img6 from "../images/analytics/analytics-chart-3.png";
 
 const Event = () => {
   const {
-    isSubmenuOpen,
-    isSubmenuItemsOpen,
-    openSubmenu,
     closeSubmenuItems,
-    openSubmenuItems,
   } = useGlobalContext();
-  //   console.log(isSubmenuItemsOpen);
-  const [toggleDashboard, setToggleDashboard] = useState(false);
-  const [toggleEvent, setToggleEvent] = useState(false);
-  const [showNotification, setShowNotification] = useState(true);
-  const handleDashboard = () => {
-    setToggleDashboard((prevState) => !prevState);
-    if (toggleEvent) {
-      setToggleEvent(false);
-    }
-  };
-  const handleEvent = () => {
-    setToggleEvent((prevState) => !prevState);
-    if (toggleDashboard) {
-      setToggleDashboard(false);
-    }
-  };
-  const displaySubmenu = (e) => {
-    const text = e.currentTarget.getAttribute("data-id");
-    const { top, right } = e.currentTarget.getBoundingClientRect();
-    openSubmenuItems(text, { top, right });
-  };
-  const handleSubmenu = (e) => {
-    const text = e.currentTarget.getAttribute("data-id");
-    const { top, right } = e.currentTarget.getBoundingClientRect();
-    if (!e.target.classList.contains("submenuitems-btn")) {
-      closeSubmenuItems();
-    }
-    
-  };
-  // const container = useRef(null);
 
+  const [showNotification, setShowNotification] = useState(true);
+  
   
 
   return (
-    <div className="mt-20 ">
-      <div className="flex  relative">
-        {/* submenu */}
-        <div
-          className={`${
-            isSubmenuOpen
-              ? " absolute left-0 top-0 bottom-0 flex flex-col   bg-dark transit-submenu w-72 z-10"
-              : "absolute flex flex-col  left-0 top-0 bottom-0 bg-dark  transit-submenu w-16"
-          }`}
-        >
-          <div
-            className={`${
-              isSubmenuOpen
-                ? "hidden"
-                : " flex flex-col bg-dark text-submenu-purple"
-            }`}
-          >
-            <div
-              data-id="home"
-              onMouseOver={displaySubmenu}
-              className="submenuitems-btn flex items-center justify-center cursor-pointer "
-            >
-              <FaHome className=" text-lg h-16 submenuitems-btn" />
-            </div>
-            <div
-              data-id="event"
-              onMouseOver={displaySubmenu}
-              
-              className="submenuitems-btn flex items-center justify-center cursor-pointer  "
-            >
-              <FaEnvelope className=" text-lg h-16 submenuitems-btn" />
-            </div>
-          </div>
-          <div
-            onMouseOver={handleSubmenu}
-            className={`${isSubmenuOpen ? "hidden " : "block h-full  "}`}
-          ></div>
-          <div className={`${isSubmenuOpen ? "block bg-dark " : "hidden "}`}>
-            <h1 className="uppercase px-6 pt-4 text-xs text-submenu-purple tracking-widest">
-              navigation
-            </h1>
-            <div className="">
-              <div
-                onClick={handleDashboard}
-                className="cursor-pointer flex items-center justify-between pl-6 pr-4 py-4"
-              >
-                <div className="flex items-center gap-x-2 text-submenu-purple">
-                  <FaHome />
-                  <h1 className="capitalize text-submenu-light">dashboard</h1>
-                </div>
-                <FaChevronRight
-                  className={`${
-                    toggleDashboard
-                      ? "transform rotate-90 transit"
-                      : "transform rotate-0 transit "
-                  } text-submenu-purple`}
-                />
-              </div>
-              <ul
-                className={`${
-                  toggleDashboard
-                    ? "px-10 text-submenu-purple transit overflow-hidden list-disc h-28 "
-                    : "px-10 list-disc transit overflow-hidden h-0"
-                } bg-submenu-light`}
-              >
-                <li className=" py-4 capitalize transition-none hover:text-white cursor-pointer ">
-                  event
-                </li>
-                <li className=" py-4 capitalize transition-none hover:text-white cursor-pointer">
-                  analytics
-                </li>
-              </ul>
-            </div>
-            <div className="">
-              <div
-                onClick={handleEvent}
-                className="cursor-pointer flex items-center justify-between pl-6 pr-4 py-4"
-              >
-                <div className="flex items-center gap-x-2 text-submenu-purple">
-                  <FaHome />
-                  <h1 className="capitalize text-submenu-light">event</h1>
-                </div>
-                <FaChevronRight
-                  className={`${
-                    toggleEvent
-                      ? "transform rotate-90 transit"
-                      : "transform rotate-0 transit "
-                  } text-submenu-purple`}
-                />
-              </div>
-              <ul
-                className={`${
-                  toggleEvent
-                    ? "px-10 text-submenu-purple transit overflow-hidden list-disc h-56 "
-                    : "px-10 list-disc transit overflow-hidden h-0"
-                } bg-submenu-light`}
-              >
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  create event
-                </li>
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  create ticket
-                </li>
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  guest
-                </li>
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  blank
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* main page */}
+  
         <div
           onMouseOver={() => closeSubmenuItems()}
           className="ml-16 bg-gray-main flex-1"
@@ -420,7 +260,7 @@ const Event = () => {
                     </h1>
                   </div>
                   <div className="pt-7 pb-9 px-6 mt-2 ">
-                  <table class="table-fixed   text-gray-light-2 text-sm w-full ">
+                  <table className="table-fixed   text-gray-light-2 text-sm w-full ">
                         <thead>
                           <tr className="text-gray-light-2   h-12 uppercase text-xs sm:text-">
                             <th className=" text-left w-2/12 sm:w-5/12 px-0 sm:px-3 border border-gray-100">
@@ -536,7 +376,7 @@ const Event = () => {
                     </h1>
                   </div>
                   <div className="pt-7 pb-9 px-6 mt-2 ">
-                  <table class="table-fixed   text-gray-light-2 text-sm w-full ">
+                  <table className="table-fixed   text-gray-light-2 text-sm w-full ">
                         <thead>
                           <tr className="text-gray-light-2   h-12 uppercase text-xs ">
                             <th className=" text-left w-2/12  px-0 sm:px-3 border border-gray-100">
@@ -647,19 +487,13 @@ const Event = () => {
                       </table>
                   </div>
                 </div>
-
-               
               </section>
-
-              
-              
 
               <section className="footer text-center">copyright</section>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      
   );
 };
 

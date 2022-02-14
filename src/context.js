@@ -8,6 +8,8 @@ const AppProvider = ({ children }) => {
   const [text, setText] = useState("");
   const [location, setLocation] = useState({});
   const [createEventFormData, setCreateEventFormData] = useState({});
+  const [createTicketFormData, setCreateTicketFormData] = useState({});
+  const [blogFormData, setBlogFormData] = useState({});
   const openSidebar = () => {
     setIsSidebarOpen(true);
   };
@@ -31,7 +33,17 @@ const AppProvider = ({ children }) => {
 
   const getCreateEventFormData=(obj)=>{
     setCreateEventFormData({...obj})
-    console.log(createEventFormData);
+    // console.log(createEventFormData);
+  }
+
+  const getCreateTicketFormData=(obj)=>{
+    setCreateTicketFormData({...obj})
+    // console.log(createTicketFormData);
+  }
+
+  const getBlogFormData=(obj)=>{
+    setBlogFormData({...obj})
+    // console.log(createTicketFormData);
   }
 
 
@@ -49,7 +61,9 @@ const AppProvider = ({ children }) => {
         closeSubmenuItems,
         text,
         location,
-        getCreateEventFormData
+        getCreateEventFormData,
+        getCreateTicketFormData,
+        getBlogFormData
       }}
     >
       {children}

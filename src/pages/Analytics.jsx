@@ -3,17 +3,14 @@ import {
   FaArrowDown,
   FaArrowUp,
   FaBarcode,
-  FaChevronRight,
   FaComment,
-  FaEnvelope,
   FaHeart,
-  FaHome,
   FaPencilAlt,
   FaSignOutAlt,
   FaTimes,
   FaUser,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useGlobalContext } from "../context";
 import img1 from "../images/analytics/analytics-1.png";
 import img2 from "../images/analytics/analytics-2.png";
@@ -30,44 +27,12 @@ import lurch from "../images/analytics/lurch.png";
 import people from "../images/analytics/people.jpg";
 
 const Analytics = () => {
-  const {
-    isSubmenuOpen,
-    closeSubmenuItems,
-    openSubmenuItems,
-  } = useGlobalContext();
-  //   console.log(isSubmenuItemsOpen);
-  const [toggleDashboard, setToggleDashboard] = useState(false);
-  const [toggleEvent, setToggleEvent] = useState(false);
-  const handleDashboard = () => {
-    setToggleDashboard((prevState) => !prevState);
-    if (toggleEvent) {
-      setToggleEvent(false);
-    } 
-  };
-  const handleEvent = () => {
-    setToggleEvent((prevState) => !prevState);
-    if (toggleDashboard) {
-      setToggleDashboard(false);
-    }
-  };
-  const displaySubmenu = (e) => {
-    const text = e.currentTarget.getAttribute("data-id");
-    const { top, right } = e.currentTarget.getBoundingClientRect();
-    openSubmenuItems(text, { top, right });
-  };
-  const handleSubmenu = (e) => {
-    const text = e.currentTarget.getAttribute("data-id");
-    const { top, right } = e.currentTarget.getBoundingClientRect();
-    if (!e.target.classList.contains("submenuitems-btn")) {
-      closeSubmenuItems();
-    }
-    
-  };
-  
+  const { closeSubmenuItems } = useGlobalContext();
+
   const [toggleDigital, setToggleDigital] = useState(false);
   const [toggleUi, setToggleUi] = useState(false);
   const [toggleFrontEnd, setToggleFrontEnd] = useState(false);
-  
+
   const handleDigital = () => {
     setToggleDigital((prevState) => !prevState);
     if (toggleUi) {
@@ -97,134 +62,40 @@ const Analytics = () => {
   };
   const frontEnd = useRef(null);
   const frontEndContainer = useRef(null);
-  useEffect(()=>{
+  const ui = useRef(null);
+  const uiContainer = useRef(null);
+  const digital = useRef(null);
+  const digitalContainer = useRef(null); 
+  useEffect(() => {
+    const digitalContainerHeight =
+      digitalContainer.current.getBoundingClientRect().height;
+    const digitalHeight = digital.current;
+    const uiContainerHeight =
+      uiContainer.current.getBoundingClientRect().height;
+    const uiHeight = ui.current;
+    const frontEndContainerHeight =
+      frontEndContainer.current.getBoundingClientRect().height;
+      const frontEndHeight = frontEnd.current;
 
-    const frontEndContainerHeight=frontEndContainer.current.getBoundingClientRect().height
-    const frontEndHeight=frontEnd.current
-    if(toggleFrontEnd){
-      frontEndHeight.style.height=`${frontEndContainerHeight}px`
+
+    if (toggleDigital) {
+      digitalHeight.style.height = `${digitalContainerHeight}px`;
+    } else {
+      digitalHeight.style.height = `0px`;
     }
-    else{
-      frontEndHeight.style.height=`0px`
+    if (toggleUi) {
+      uiHeight.style.height = `${uiContainerHeight}px`;
+    } else {
+      uiHeight.style.height = `0px`;
     }
-    // console.log(frontendHeight);
-  },[toggleFrontEnd])
+    if (toggleFrontEnd) {
+      frontEndHeight.style.height = `${frontEndContainerHeight}px`;
+    } else {
+      frontEndHeight.style.height = `0px`;
+    }
+  }, [toggleDigital, toggleUi, toggleFrontEnd]);
   return (
-    <div className="mt-20 ">
-      <div className="flex  relative">
-        {/* submenu */}
-        <div
-          className={`${
-            isSubmenuOpen
-              ? " absolute left-0 top-0 bottom-0 flex flex-col   bg-dark transit-submenu w-72 z-10"
-              : "absolute flex flex-col  left-0 top-0 bottom-0 bg-dark  transit-submenu w-16"
-          }`}
-        >
-          <div
-            className={`${
-              isSubmenuOpen
-                ? "hidden"
-                : " flex flex-col bg-dark text-submenu-purple"
-            }`}
-          >
-            <div
-              data-id="home"
-              onMouseOver={displaySubmenu}
-              className="submenuitems-btn flex items-center justify-center cursor-pointer "
-            >
-              <FaHome className=" text-lg h-16 submenuitems-btn" />
-            </div>
-            <div
-              data-id="event"
-              onMouseOver={displaySubmenu}
-              onClick=""
-              className="submenuitems-btn flex items-center justify-center cursor-pointer  "
-            >
-              <FaEnvelope className=" text-lg h-16 submenuitems-btn" />
-            </div>
-          </div>
-          <div
-            onMouseOver={handleSubmenu}
-            className={`${isSubmenuOpen ? "hidden " : "block h-full  "}`}
-          ></div>
-          <div className={`${isSubmenuOpen ? "block bg-dark " : "hidden "}`}>
-            <h1 className="uppercase px-6 pt-4 text-xs text-submenu-purple tracking-widest">
-              navigation
-            </h1>
-            <div className="">
-              <div
-                onClick={handleDashboard}
-                className="cursor-pointer flex items-center justify-between pl-6 pr-4 py-4"
-              >
-                <div className="flex items-center gap-x-2 text-submenu-purple">
-                  <FaHome />
-                  <h1 className="capitalize text-submenu-light">dashboard</h1>
-                </div>
-                <FaChevronRight
-                  className={`${
-                    toggleDashboard
-                      ? "transform rotate-90 transit"
-                      : "transform rotate-0 transit "
-                  } text-submenu-purple`}
-                />
-              </div>
-              <ul
-                className={`${
-                  toggleDashboard
-                    ? "px-10 text-submenu-purple transit overflow-hidden list-disc h-28 "
-                    : "px-10 list-disc transit overflow-hidden h-0"
-                } bg-submenu-light`}
-              >
-                <li className=" py-4 capitalize transition-none hover:text-white cursor-pointer ">event</li>
-                <li className=" py-4 capitalize transition-none hover:text-white cursor-pointer">analytics</li>
-              </ul>
-            </div>
-            <div className="">
-              <div
-                onClick={handleEvent}
-                className="cursor-pointer flex items-center justify-between pl-6 pr-4 py-4"
-              >
-                <div className="flex items-center gap-x-2 text-submenu-purple">
-                  <FaHome />
-                  <h1 className="capitalize text-submenu-light">event</h1>
-                </div>
-                <FaChevronRight
-                  className={`${
-                    toggleEvent
-                      ? "transform rotate-90 transit"
-                      : "transform rotate-0 transit "
-                  } text-submenu-purple`}
-                />
-              </div>
-              <ul
-                className={`${
-                  toggleEvent
-                    ? "px-10 text-submenu-purple transit overflow-hidden list-disc h-56 "
-                    : "px-10 list-disc transit overflow-hidden h-0"
-                } bg-submenu-light`}
-              >
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  create event
-                </li>
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  create ticket
-                </li>
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  guest
-                </li>
-                <li className=" py-4 capitalize transition-none">
-                  {/* <Link to="#"> create event</Link> */}
-                  blank
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* main page */}
+    
         <div
           onMouseOver={() => closeSubmenuItems()}
           className="ml-16 bg-gray-main flex-1"
@@ -236,7 +107,9 @@ const Analytics = () => {
                   hi, <span className="font-normal  text-sm">welcome</span>
                 </h1>
                 <div className="flex gap-x-1 items-center ">
-                  <button className="bg-transparent capitalize hover:text-purple-light">home</button>
+                  <button className="bg-transparent capitalize hover:text-purple-light">
+                    home
+                  </button>
                   {/* <FaChevronRight/> */}
                   <i className="">{">"}</i>
                   <button className="bg-transparent capitalize  hover:text-purple-light">
@@ -244,7 +117,6 @@ const Analytics = () => {
                   </button>
                 </div>
               </section>
-
 
               <section className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-y-10 gap-x-8">
                 {/* single item */}
@@ -315,7 +187,6 @@ const Analytics = () => {
                 </div>
               </section>
 
-
               <section className=" mb-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-y-10 gap-x-8 ">
                 {/* single item */}
                 <div className="rounded bg-white shadow-sm ">
@@ -331,9 +202,7 @@ const Analytics = () => {
                         <h1 className="capitalize font-semibold text-sm  tracking-wide">
                           Wordpress Theme Development
                         </h1>
-                        <span className="font-bold text-gray-main">
-                          85%
-                        </span>
+                        <span className="font-bold text-gray-main">85%</span>
                       </div>
                       {/* replace with progress bar */}
                       <div className="flex rounded h-1 bg-gray-200 ">
@@ -348,9 +217,7 @@ const Analytics = () => {
                         <h1 className="capitalize font-semibold text-sm  tracking-wide">
                           UI Design
                         </h1>
-                        <span className="font-bold text-gray-main">
-                          65%
-                        </span>
+                        <span className="font-bold text-gray-main">65%</span>
                       </div>
                       {/* replace with progress bar */}
                       <div className="flex rounded h-1 bg-gray-200 ">
@@ -365,9 +232,7 @@ const Analytics = () => {
                         <h1 className="capitalize font-semibold text-sm tracking-wide">
                           Digital Marketing
                         </h1>
-                        <span className="font-bold text-gray-main">
-                          65%
-                        </span>
+                        <span className="font-bold text-gray-main">65%</span>
                       </div>
                       {/* replace with progress bar */}
                       <div className="flex rounded h-1 bg-gray-200 ">
@@ -382,7 +247,7 @@ const Analytics = () => {
                 <div className="rounded bg-white shadow-sm ">
                   <div className="px-6 pt-5 pb-5 text-gray-main border-b border-gray-100">
                     <h1 className="capitalize text-lg font-normal tracking-wide ">
-                    Bloomreach Connect
+                      Bloomreach Connect
                     </h1>
                   </div>
                   <div className="pt-7 pb-9 px-6 ">
@@ -404,7 +269,7 @@ const Analytics = () => {
                 <div className="rounded bg-white shadow-sm ">
                   <div className="px-6 pt-5 pb-5 text-gray-main border-b border-gray-100">
                     <h1 className="capitalize text-lg font-normal tracking-wide ">
-                    Tech Inclusion
+                      Tech Inclusion
                     </h1>
                   </div>
                   <div className="pt-7 pb-9 px-6 ">
@@ -426,7 +291,7 @@ const Analytics = () => {
                 <div className="rounded bg-white shadow-sm ">
                   <div className="px-6 pt-5 pb-5 border-b border-gray-100">
                     <h1 className="capitalize text-lg font-normal tracking-wide ">
-                    Presto Summit
+                      Presto Summit
                     </h1>
                   </div>
                   <div className="pt-7 pb-9 px-6 ">
@@ -444,7 +309,7 @@ const Analytics = () => {
                   </div>
                 </div>
               </section>
-              
+
               <section className="mb-8 flex flex-col xl:flex-row xl:items-start  gap-y-10 gap-x-8">
                 {/* single item */}
                 <div className="rounded bg-white shadow-sm xl:w-8/12 ">
@@ -495,7 +360,7 @@ const Analytics = () => {
                     </h1>
                   </div>
                   <div className="pt-9 pb-9 px-14 ">
-                    <a href="" className="">
+                    <a href="dummy.com" className="">
                       <div className=" border-l-2 border-gray-100 text-gray-light-2 hover:text-purple-light flex gap-x-6 ">
                         <div className="h-4 w-4 rounded-full bg-purple-light m-left "></div>
                         <div className="pb-4">
@@ -513,7 +378,7 @@ const Analytics = () => {
                       </div>
                     </a>
 
-                    <a href="" className="">
+                    <a href="dummy.com" className="">
                       <div className="border-l-2 border-gray-100 text-gray-light-2 hover:text-purple-light flex gap-x-6 ">
                         <div className="h-4 w-4 rounded-full bg-green-light m-left mt-1"></div>
                         <div className="pb-4">
@@ -531,7 +396,7 @@ const Analytics = () => {
                       </div>
                     </a>
 
-                    <a href="" className="">
+                    <a href="dummy.com" className="">
                       <div className="border-l-2 border-gray-100 text-gray-light-2 hover:text-purple-light flex gap-x-6 ">
                         <div className="h-4 w-4 rounded-full bg-yellow-light m-left mt-1"></div>
                         <div className="pb-4">
@@ -549,7 +414,7 @@ const Analytics = () => {
                       </div>
                     </a>
 
-                    <a href="" className="">
+                    <a href="dummy.com" className="">
                       <div className="border-l-2 border-gray-100 text-gray-light-2 hover:text-purple-light flex gap-x-6 ">
                         <div className="h-4 w-4 rounded-full bg-purple-light m-left mt-1"></div>
                         <div className="pb-4">
@@ -567,7 +432,7 @@ const Analytics = () => {
                       </div>
                     </a>
 
-                    <a href="" className="">
+                    <a href="dummy.com" className="">
                       <div className="border-l-2 border-gray-100 text-gray-light-2 hover:text-purple-light flex gap-x-6 ">
                         <div className="h-4 w-4 rounded-full bg-gray-600 m-left mt-1"></div>
                         <div className="">
@@ -782,7 +647,7 @@ const Analytics = () => {
                       <h1 className="bg-table-light text-center py-4 text-gray-light-2 text-2xl uppercase font-bold">
                         february 2022
                       </h1>
-                      <table class="table-fixed  w-full text-gray-light text-sm font-semibold">
+                      <table className="table-fixed  w-full text-gray-light text-sm font-semibold">
                         <thead>
                           <tr className="text-gray-light-2  bg-table-light-2  h-10 uppercase">
                             <th>sun</th>
@@ -892,7 +757,7 @@ const Analytics = () => {
                           Sponsor by
                         </h5>
                         <div className="flex gap-x-1">
-                          <a href="" className="">
+                          <a href="dummy.com" className="">
                             <div className="w-9 h-9 rounded-full overflow-hidden ">
                               <img
                                 src={ursula}
@@ -902,7 +767,7 @@ const Analytics = () => {
                             </div>
                           </a>
 
-                          <a href="" className="">
+                          <a href="dummy.com" className="">
                             <div className="w-9 h-9 rounded-full overflow-hidden ">
                               <img
                                 src={lurch}
@@ -912,7 +777,7 @@ const Analytics = () => {
                             </div>
                           </a>
 
-                          <a href="" className="">
+                          <a href="dummy.com" className="">
                             <div className="w-9 h-9 rounded-full overflow-hidden ">
                               <img
                                 src={alan}
@@ -922,7 +787,7 @@ const Analytics = () => {
                             </div>
                           </a>
 
-                          <a href="" className="">
+                          <a href="dummy.com" className="">
                             <div className="w-9 h-9 rounded-full overflow-hidden ">
                               <img
                                 src={ursula}
@@ -942,27 +807,27 @@ const Analytics = () => {
                     <div className="flex items-center justify-between px-6 pt-4 pb-6">
                       <div className="flex gap-x-8">
                         <a
-                          href=""
+                          href="dummy.com"
                           className="flex items-center gap-x-1 text-base"
                         >
                           <FaHeart className="text-gray-font text-sm" />
                           <span className="text-gray-light-3">126</span>
                         </a>
                         <a
-                          href=""
+                          href="dummy.com"
                           className="flex items-center gap-x-1 text-base"
                         >
                           <FaComment className="text-gray-font text-sm" />
                           <span className="text-gray-light-3">03</span>
                         </a>
                         <a
-                          href=""
+                          href="dummy.com"
                           className="flex items-center gap-x-1 text-base"
                         >
                           <FaSignOutAlt className="text-gray-font text-sm" />
                         </a>
                       </div>
-                      <a href="" className="flex items-center gap-x-1">
+                      <a href="dummy.com" className="flex items-center gap-x-1">
                         <FaBarcode />
                         <span className="capitalize text-gray-dark">
                           insights
@@ -979,7 +844,7 @@ const Analytics = () => {
                       </h1>
                     </div>
                     <div className="pt-7 pb-9 px-6  relative overflow-auto mt-2">
-                      <table class="table-fixed   text-gray-light-2 text-sm w-full ">
+                      <table className="table-fixed   text-gray-light-2 text-sm w-full ">
                         <thead>
                           <tr className="text-gray-light-2   h-12 uppercase text-xs sm:text-">
                             <th className=" text-left w-2/12 sm:w-5/12 px-0 sm:px-3 border border-gray-100">
@@ -1138,118 +1003,123 @@ const Analytics = () => {
                           </span>
                         </div>
                         <div
+                          ref={digital}
                           className={`${
                             toggleDigital
                               ? "h-96 overflow-hidden transit "
                               : "h-0 overflow-hidden transit"
                           }`}
                         >
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              event ID:
-                            </h1>
-                            <p className="flex-1 text-base ">
-                              <span className="">#</span>9580
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Status:
-                            </h1>
-                            <p className=" px-2 py-1 text-xs bg-green-500 rounded capitalize text-black  ">
-                              ongoing
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Event Date:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              08 July 2015 - 30 January 2015
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Show Date:
-                            </h1>
-                            <p className="flex-1 text-base  ">
-                              25 January 2015
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              venue
-                            </h1>
-                            <p className="flex-1 text-base ">
-                              Southpark Station, Hamelton, CA 20155
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Vendor:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">10</p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Tickets:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                1000
-                              </a>
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Crew:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                200
-                              </a>
-                            </p>
-                          </div>
-                          <div className="px-3 mb-5">
-                            <div className="border-t border-gray-200"></div>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Revenue:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <span className="">$</span>10.405,00
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Exhibitor:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                5
-                              </a>
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              Total Invitation:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                200
-                              </a>
-                            </p>
+                          <div className="" ref={digitalContainer}>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                event ID:
+                              </h1>
+                              <p className="flex-1 text-base ">
+                                <span className="">#</span>9580
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Status:
+                              </h1>
+                              <p className=" px-2 py-1 text-xs bg-green-500 rounded capitalize text-black  ">
+                                ongoing
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Event Date:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                08 July 2015 - 30 January 2015
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Show Date:
+                              </h1>
+                              <p className="flex-1 text-base  ">
+                                25 January 2015
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                venue
+                              </h1>
+                              <p className="flex-1 text-base ">
+                                Southpark Station, Hamelton, CA 20155
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Vendor:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                10
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Tickets:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  1000
+                                </a>
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Crew:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  200
+                                </a>
+                              </p>
+                            </div>
+                            <div className="px-3 mb-5">
+                              <div className="border-t border-gray-200"></div>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Revenue:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <span className="">$</span>10.405,00
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Exhibitor:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  5
+                                </a>
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                Total Invitation:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  200
+                                </a>
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1263,9 +1133,7 @@ const Analytics = () => {
                               : "flex  justify-between items-center py-2 px-3 text-gray-main mb-4 rounded-sm bg-white border border-gray-100 cursor-pointer "
                           }`}
                         >
-                          <h1 className="capitalize">
-                            digital marketing conference
-                          </h1>
+                          <h1 className="capitalize">digital ui conference</h1>
                           <span
                             className={`${
                               toggleUi ? "hidden" : "block text-3xl font-thin"
@@ -1282,121 +1150,127 @@ const Analytics = () => {
                           </span>
                         </div>
                         <div
+                          ref={ui}
                           className={`${
                             toggleUi
                               ? "h-96 overflow-hidden transit "
                               : "h-0 overflow-hidden transit"
                           }`}
                         >
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              event ID:
-                            </h1>
-                            <p className="flex-1 text-base ">
-                              <span className="">#</span>9580
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Status:
-                            </h1>
-                            <p className=" px-2 py-1 text-xs bg-green-500 rounded capitalize text-black  ">
-                              ongoing
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Event Date:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              08 July 2015 - 30 January 2015
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Show Date:
-                            </h1>
-                            <p className="flex-1 text-base  ">
-                              25 January 2015
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              venue
-                            </h1>
-                            <p className="flex-1 text-base ">
-                              Southpark Station, Hamelton, CA 20155
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Vendor:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">10</p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Tickets:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                1000
-                              </a>
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Crew:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                200
-                              </a>
-                            </p>
-                          </div>
-                          <div className="px-3 mb-5">
-                            <div className="border-t border-gray-200"></div>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Revenue:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <span className="">$</span>10.405,00
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Exhibitor:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                5
-                              </a>
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              Total Invitation:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                200
-                              </a>
-                            </p>
+                          <div className="" ref={uiContainer}>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                event ID:
+                              </h1>
+                              <p className="flex-1 text-base ">
+                                <span className="">#</span>9580
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Status:
+                              </h1>
+                              <p className=" px-2 py-1 text-xs bg-green-500 rounded capitalize text-black  ">
+                                ongoing
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Event Date:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                08 July 2015 - 30 January 2015
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Show Date:
+                              </h1>
+                              <p className="flex-1 text-base  ">
+                                25 January 2015
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                venue
+                              </h1>
+                              <p className="flex-1 text-base ">
+                                Southpark Station, Hamelton, CA 20155
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Vendor:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                10
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Tickets:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  1000
+                                </a>
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Crew:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  200
+                                </a>
+                              </p>
+                            </div>
+                            <div className="px-3 mb-5">
+                              <div className="border-t border-gray-200"></div>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Revenue:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <span className="">$</span>10.405,00
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Exhibitor:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  5
+                                </a>
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                Total Invitation:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  200
+                                </a>
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
+
                       <div className="">
                         <div
                           onClick={handleFrontEnd}
@@ -1407,7 +1281,7 @@ const Analytics = () => {
                           }`}
                         >
                           <h1 className="capitalize">
-                            digital marketing conference
+                            digital frontend conference
                           </h1>
                           <span
                             className={`${
@@ -1428,7 +1302,8 @@ const Analytics = () => {
                             -
                           </span>
                         </div>
-                        <div ref={frontEnd}
+                        <div
+                          ref={frontEnd}
                           className={`${
                             toggleFrontEnd
                               ? "h-96 transit overflow-hidden "
@@ -1436,120 +1311,117 @@ const Analytics = () => {
                           }`}
                         >
                           <div className="" ref={frontEndContainer}>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                event ID:
+                              </h1>
+                              <p className="flex-1 text-base ">
+                                <span className="">#</span>9580
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Status:
+                              </h1>
+                              <p className=" px-2 py-1 text-xs bg-green-500 rounded capitalize text-black  ">
+                                ongoing
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Event Date:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                08 July 2015 - 30 January 2015
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Show Date:
+                              </h1>
+                              <p className="flex-1 text-base  ">
+                                25 January 2015
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                venue
+                              </h1>
+                              <p className="flex-1 text-base ">
+                                Southpark Station, Hamelton, CA 20155
+                              </p>
+                            </div>
 
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              event ID:
-                            </h1>
-                            <p className="flex-1 text-base ">
-                              <span className="">#</span>9580
-                            </p>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Vendor:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                10
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Tickets:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  1000
+                                </a>
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Crew:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  200
+                                </a>
+                              </p>
+                            </div>
+                            <div className="px-3 mb-5">
+                              <div className="border-t border-gray-200"></div>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Revenue:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <span className="">$</span>10.405,00
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                {" "}
+                                Total Exhibitor:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  5
+                                </a>
+                              </p>
+                            </div>
+                            <div className="flex mb-5  px-3 text-gray-light-2 ">
+                              <h1 className="font-semibold w-36 text-left capitalize text-base">
+                                Total Invitation:
+                              </h1>
+                              <p className="flex-1 text-base inline-block ">
+                                <a href="dummy.com" className="">
+                                  200
+                                </a>
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Status:
-                            </h1>
-                            <p className=" px-2 py-1 text-xs bg-green-500 rounded capitalize text-black  ">
-                              ongoing
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Event Date:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              08 July 2015 - 30 January 2015
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Show Date:
-                            </h1>
-                            <p className="flex-1 text-base  ">
-                              25 January 2015
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              venue
-                            </h1>
-                            <p className="flex-1 text-base ">
-                              Southpark Station, Hamelton, CA 20155
-                            </p>
-                          </div>
-
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Vendor:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">10</p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Tickets:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                1000
-                              </a>
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Crew:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                200
-                              </a>
-                            </p>
-                          </div>
-                          <div className="px-3 mb-5">
-                            <div className="border-t border-gray-200"></div>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Revenue:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <span className="">$</span>10.405,00
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              {" "}
-                              Total Exhibitor:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                5
-                              </a>
-                            </p>
-                          </div>
-                          <div className="flex mb-5  px-3 text-gray-light-2 ">
-                            <h1 className="font-semibold w-36 text-left capitalize text-base">
-                              Total Invitation:
-                            </h1>
-                            <p className="flex-1 text-base inline-block ">
-                              <a href="dummy.com" className="">
-                                200
-                              </a>
-                            </p>
-                          </div>
-                          </div>
-                         
-                        
-                          
-                         
                         </div>
                       </div>
                     </div>
@@ -1557,12 +1429,14 @@ const Analytics = () => {
                 </div>
               </section>
 
-              <section className="bg-white shadow py-2 text-center">copyright</section>
+              <section className="bg-white shadow py-2 text-center text-gray-light-2">
+                copyright &copy;
+              </section>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+     
+    
   );
 };
 

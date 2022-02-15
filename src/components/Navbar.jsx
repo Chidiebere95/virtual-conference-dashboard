@@ -2,6 +2,7 @@ import React, {  useEffect } from "react";
 import { FaBars, FaBell, FaSearch } from "react-icons/fa";
 import img from "../images/navbar/nav-img.jpg";
 import { useGlobalContext } from "../context";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { isSubmenuOpen, openSubmenu, closeSubmenu, closeSubmenuItems } =
@@ -34,18 +35,22 @@ const Navbar = () => {
             <h1
               className={`${
                 isSubmenuOpen
-                  ? "text-lg font-bold hidden"
-                  : "text-lg font-bold block "
+                  ? " hidden"
+                  : "text-lg font-bold block cursor-pointer"
               }`}
             >
+              <Link to="/">
               D
+              </Link>
             </h1>
             <h1
               className={`${
-                isSubmenuOpen ? "hidden md:block text-lg" : "hidden"
+                isSubmenuOpen ? "hidden md:block text-lg cursor-pointer" : "hidden"
               }`}
             >
+              <Link to="/">
               DLAB
+              </Link>
             </h1>
           </div>
         </div>
@@ -62,9 +67,12 @@ const Navbar = () => {
             </div>
           </div>
           <div className="flex flex-1  justify-end">
-            <button className="hidden md:block mx-5 my-auto rounded bg-purple-light-2 text-white capitalize px-5 py-2">
-              create event
+            <button className="hidden md:block mx-5 my-auto rounded bg-purple-light text-white capitalize px-5 py-2">
+            <Link to="create-event">
+            create event
+            </Link>
             </button>
+
             <div className="w-16 md:w-20 flex items-center justify-center border-l-nav border-r-nav">
               <FaBell className="text-purple-500 font-extralight bg-transparent text-xl   " />
             </div>

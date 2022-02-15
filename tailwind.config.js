@@ -23,10 +23,7 @@ module.exports = {
         "table-light": "rgba(105, 27, 204, 0.05)",
         "table-light-2": "rgba(105, 27, 204, 0.1)",
 
-        "yellow-light-pricing": "#FFF022",
-        "home-pink": "#ff6af0",
-        "home-blue": "#6700FF",
-        "home-yellow": "#fff022", 
+        
       }), 
       borderColor: theme => ({
         ...theme('colors'),

@@ -48,3 +48,6 @@
 .w-screen-full {
   width: 1536px;
 }
+.red-text {
+  color: red!important;
+}

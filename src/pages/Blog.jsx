@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../context";
 
 const Blog = () => {
-  const {
+  const { 
     closeSubmenuItems,
     getBlogFormData,
   } = useGlobalContext();

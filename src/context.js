@@ -10,6 +10,7 @@ const AppProvider = ({ children }) => {
   const [createEventFormData, setCreateEventFormData] = useState({});
   const [createTicketFormData, setCreateTicketFormData] = useState({});
   const [blogFormData, setBlogFormData] = useState({});
+  const [speakersFormData, setSpeakersFormData] = useState([]);
   const openSidebar = () => {
     setIsSidebarOpen(true);
   };
@@ -46,6 +47,11 @@ const AppProvider = ({ children }) => {
     // console.log(createTicketFormData);
   }
 
+  const getSpeakersFormData=(array)=>{
+    setSpeakersFormData([...array])
+    console.log(speakersFormData);
+  }
+
 
   return (
     <AppContext.Provider
@@ -63,7 +69,8 @@ const AppProvider = ({ children }) => {
         location,
         getCreateEventFormData,
         getCreateTicketFormData,
-        getBlogFormData
+        getBlogFormData,
+        getSpeakersFormData
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 import React, { useRef, useState,useEffect } from "react";
 import { FaChevronRight, FaEnvelope, FaHome } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link,NavLink } from "react-router-dom";
 import { useGlobalContext } from "../context";
 
 const Sidebar = () => {
@@ -114,7 +114,8 @@ const Sidebar = () => {
             } bg-submenu-light`}
           >
             <div ref={dashboardLinks} className="">
-              <Link to="/">
+              <NavLink to="/" activeStyle={{color:"white"}} exact>
+
                 <li
                   onClick={() => closeSubmenu()}
                   className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
@@ -122,8 +123,8 @@ const Sidebar = () => {
                   <span className="">•</span>
                   <span className="hover:text-white flex-1">event</span>
                 </li>
-              </Link>
-              <Link to="analytics">
+              </NavLink>
+              <NavLink to="analytics" activeStyle={{color:"white"}} exact>
                 <li
                   onClick={() => closeSubmenu()}
                   className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none hover:text-white cursor-pointer"
@@ -131,7 +132,7 @@ const Sidebar = () => {
                   <span className="">•</span>
                   <span className="">analytics</span>
                 </li>
-              </Link>
+              </NavLink>
             </div>
           </div>
         </div>
@@ -162,7 +163,7 @@ const Sidebar = () => {
             } bg-submenu-light`}
           >
             <div ref={eventLinks} className="">
-              <Link to="/create-event">
+              <NavLink to="/create-event" activeStyle={{color:"white"}} exact>
                 <li
                   onClick={() => closeSubmenu()}
                   className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
@@ -170,8 +171,8 @@ const Sidebar = () => {
                   <span className="">•</span>
                   <span className=" flex-1">create event</span>
                 </li>
-              </Link>
-              <Link to="/create-ticket">
+              </NavLink>
+              <NavLink to="/create-ticket" activeStyle={{color:"white"}} exact>
                 <li
                   onClick={() => closeSubmenu()}
                   className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
@@ -179,8 +180,8 @@ const Sidebar = () => {
                   <span className="">•</span>
                   <span className=" flex-1">create ticket</span>
                 </li>
-              </Link>
-              <Link to="/blog">
+              </NavLink>
+              <NavLink to="/blog" activeStyle={{color:"white"}} exact>
                 <li
                   onClick={() => closeSubmenu()}
                   className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
@@ -188,7 +189,16 @@ const Sidebar = () => {
                   <span className="">•</span>
                   <span className=" flex-1">blog</span>
                 </li>
-              </Link>
+              </NavLink>
+              <NavLink to="/speakers" activeStyle={{color:"white"}} exact>
+                <li
+                  onClick={() => closeSubmenu()}
+                  className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
+                >
+                  <span className="">•</span>
+                  <span className=" flex-1">speakers</span>
+                </li>
+              </NavLink>
             </div>
           </div>
         </div>

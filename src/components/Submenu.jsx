@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import {  NavLink } from "react-router-dom";
 import { useGlobalContext } from "../context";
 
 const Submenu = () => {
@@ -20,7 +20,7 @@ const Submenu = () => {
     >
       <div
         className={`${
-          text === "home" ? "block w-44 shadow-sm bg-submenu-light" : "hidden"
+          text === "home" ? "block w-44 shadow-sm bg-submenu-light text-submenu-purple" : "hidden"
         }`}
       >
         
@@ -30,66 +30,78 @@ const Submenu = () => {
         >
           dashboard
         </h1>
-        <Link to="/">
+     
+        <NavLink to="/" activeStyle={{color:"white"}} exact>
           <h1
             onClick={() => closeSubmenuItems()}
-            className="pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
+            className="pl-3 py-3 hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
           >
             events
           </h1>
-        </Link>
-        <Link to="/analytics">
+        </NavLink>
+        <NavLink to="/analytics" activeStyle={{color:"white"}} exact>
           <h1
             onClick={() => closeSubmenuItems()}
-            className="pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
+            className="pl-3 py-3  hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
           >
             analytics
           </h1>
-        </Link>
+        </NavLink>
         
       </div>
       <div
         className={`${
-          text === "event" ? "block w-44 shadow-sm bg-submenu-light" : "hidden"
+          text === "event" ? "block w-44 shadow-sm bg-submenu-light text-submenu-purple" : "hidden"
         }`}
       >
         <h1 className="pl-3 py-3 text-white cursor-pointer capitalize text-sm ">
           event
         </h1>
-        <Link to="/create-event">
+        <NavLink to="/create-event" activeStyle={{color:"white"}} exact>
           <h1
             onClick={() => closeSubmenuItems()}
-            className="pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
+            className="pl-3 py-3  hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
           >
             create event
           </h1>
-        </Link>
-        <Link to="/create-ticket">
+        </NavLink>
+        <NavLink to="/create-ticket" activeStyle={{color:"white"}} exact>
           <h1
             onClick={() => closeSubmenuItems()}
-            className="pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
+            className="pl-3 py-3 hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
           >
             create ticket
           </h1>
-        </Link>
-        <Link to="/blog">
+        </NavLink>
+        <NavLink to="/create-blog" activeStyle={{color:"white"}} exact>
           <h1
             onClick={() => closeSubmenuItems()}
-            className="pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
+            className="pl-3 py-3  hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
           >
-            blog
+           Create blog
           </h1>
-        </Link>
+        </NavLink>
         
-        <Link to="/speakers">
+        <NavLink to="/create-speakers" activeStyle={{color:"white"}} exact>
           <h1
             onClick={() => closeSubmenuItems()}
-            className="pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
+            className="pl-3 py-3 hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
           >
-            Speakers
+           Create Speakers
           </h1>
-        </Link>
+        </NavLink>
         
+        
+        <NavLink to="/create-sponsors" activeStyle={{color:"white"}} exact>
+          <h1
+            onClick={() => closeSubmenuItems()}
+            className="pl-3 py-3  hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4"
+          >
+           Create Sponsors
+          </h1>
+        </NavLink>
+   
+              
       </div>
     </aside>
   );

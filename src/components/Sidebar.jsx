@@ -1,6 +1,6 @@
 import React, { useRef, useState,useEffect } from "react";
 import { FaChevronRight, FaEnvelope, FaHome } from "react-icons/fa";
-import { Link,NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useGlobalContext } from "../context";
 
 const Sidebar = () => {
@@ -181,7 +181,7 @@ const Sidebar = () => {
                   <span className=" flex-1">create ticket</span>
                 </li>
               </NavLink>
-              <NavLink to="/blog" activeStyle={{color:"white"}} exact>
+              <NavLink to="/create-blog" activeStyle={{color:"white"}} exact>
                 <li
                   onClick={() => closeSubmenu()}
                   className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
@@ -190,15 +190,25 @@ const Sidebar = () => {
                   <span className=" flex-1">blog</span>
                 </li>
               </NavLink>
-              <NavLink to="/speakers" activeStyle={{color:"white"}} exact>
+              <NavLink to="/create-speakers" activeStyle={{color:"white"}} exact>
                 <li
                   onClick={() => closeSubmenu()}
                   className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
                 >
                   <span className="">•</span>
-                  <span className=" flex-1">speakers</span>
+                  <span className=" flex-1">create speakers</span>
                 </li>
               </NavLink>
+              <NavLink to="/create-sponsors" activeStyle={{color:"white"}} exact>
+                <li
+                  onClick={() => closeSubmenu()}
+                  className=" py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white "
+                >
+                  <span className="">•</span>
+                  <span className=" flex-1">create sponsors</span>
+                </li>
+              </NavLink>
+              
             </div>
           </div>
         </div>

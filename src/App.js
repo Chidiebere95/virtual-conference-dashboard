@@ -7,8 +7,9 @@ import Event from "./pages/Event";
 import Analytics from "./pages/Analytics";
 import CreateEvent from "./pages/CreateEvent";
 import CreateTicket from "./pages/CreateTicket";
-import Blog from "./pages/Blog";
-import Speakers from "./pages/Speakers";
+import CreateBlog from "./pages/CreateBlog";
+import CreateSpeakers from "./pages/CreateSpeakers";
+import CreateSponsors from "./pages/CreateSponsors";
 
 function App() {
   return (
@@ -16,17 +17,18 @@ function App() {
       <Router>
         <Navbar />
         <Submenu />
-        <Switch>
           <div className="mt-20 relative flex">
             <Sidebar />
+        <Switch>
             <Route exact path="/" component={Event} />
             <Route exact path="/analytics" component={Analytics} />
             <Route exact path="/create-event" component={CreateEvent} />
             <Route exact path="/create-ticket" component={CreateTicket} />
-            <Route exact path="/blog" component={Blog} />
-            <Route exact path="/speakers" component={Speakers} />
-          </div>
+            <Route exact path="/create-blog" component={CreateBlog} />
+            <Route exact path="/create-speakers" component={CreateSpeakers} />
+            <Route exact path="/create-sponsors" component={CreateSponsors} />
         </Switch>
+          </div>
       </Router>
     </div>
     

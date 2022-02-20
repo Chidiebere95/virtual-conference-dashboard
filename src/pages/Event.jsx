@@ -372,7 +372,7 @@ const Event = () => {
                 <div className="rounded bg-white shadow-sm  ">
                   <div className="px-6 pt-5 pb-5 border-b border-gray-100">
                     <h1 className="capitalize text-lg font-normal tracking-wider text-gray-main ">
-                    Sales By Ticket Type
+                    recent orders
                     </h1>
                   </div>
                   <div className="pt-7 pb-9 px-6 mt-2 ">

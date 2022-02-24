@@ -12,10 +12,10 @@ const CreateSpeakers = () => {
   const [role, setRole] = useState("");
   const [img, setImg] = useState("");
   const [edit, setEdit] = useState(false);
-  const [editStatus, setEditStatus] = useState(false);
   const [editId, setEditId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [addedSpeaker, setAddedSpeaker] = useState("");
+
 
   const infoContainer = useRef(null);
   const idContainer = useRef(null);
@@ -30,11 +30,14 @@ const CreateSpeakers = () => {
     img,
     id,
   };
+  //   console.log(formValue);
   const handleChange = (e) => {
     const target = e.target;
     const name = target.name;
     const value = target.value;
-    e.target.style.borderColor = "rgba(243, 244, 246,1)";
+    e.target.style.borderColor = "rgba(243, 244, 246,0.4)";
+    // console.log(name, value);
+
     if (name === "id") {
       setIdAssigned(value);
     }
@@ -59,7 +62,7 @@ const CreateSpeakers = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const item = speakers.find((item) => item.id === parseInt(idAssigned));
-    // console.log(item);
+    console.log(item);
     if (
       idAssigned === "" ||
       id === 0 ||
@@ -72,7 +75,7 @@ const CreateSpeakers = () => {
       if (idAssigned === "") {
         idContainer.current.style.borderColor = "red";
       } else {
-        idContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+        idContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
       }
       if (id === 0 || id < 0) {
         infoContainer.current.textContent =
@@ -84,101 +87,159 @@ const CreateSpeakers = () => {
       if (nameContainer.current.value === "") {
         nameContainer.current.style.borderColor = "red";
       } else {
-        nameContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+        nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
       }
       if (roleContainer.current.value === "") {
         roleContainer.current.style.borderColor = "red";
       } else {
-        roleContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+        roleContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
       }
       if (imgUrlContainer.current.value === "") {
         imgUrlContainer.current.style.borderColor = "red";
       } else {
-        imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+        imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
       }
       if (item) {
         infoContainer.current.textContent =
           "Id is already assigned to a a speaker. Use another Id";
         idContainer.current.style.borderColor = "red";
       }
-    } else if (edit) {
-      // console.log("edit is true");
-      const tempSpeakers = speakers.map((item) => {
-        if (item.id === editId) {
-          return { ...item, name, role, img };
-        }
-        return item;
-      });
+    } else if (edit ) {
+      // const Ids = speakers.map((item) => item.id);
+      // const currentIds = Ids.filter((item) => item !== editId);
+      
+      // if(currentIds.indexOf(id)){
+        
+      // }
+      // console.log(currentIds);
+      // console.log(currentIds.indexOf(id));
 
-      // console.log(tempSpeakers);
-      const tempIds = tempSpeakers.map((item) => item.id);
-      const otherSpeakersIds = tempIds.filter(
-        (item) => item !== parseInt(editId)
-      );
-      const inputValue = parseInt(idContainer.current.value);
-      // console.log(tempIds, otherSpeakersIds);
-      // console.log(inputValue);
-      let idAlreadyExisting;
-      if (otherSpeakersIds.indexOf(parseInt(inputValue)) === -1) {
-        idAlreadyExisting = false;
-      } else {
-        idAlreadyExisting = true;
-      }
-      // console.log(idAlreadyExisting);
-      if (idAlreadyExisting) {
-        infoContainer.current.textContent =
-          "Id is already assigned to a a speaker. Use another Id";
-        idContainer.current.style.borderColor = "red";
-      } else if (!idAlreadyExisting) {
-        let tempSpeakers2 = speakers.filter((item) => item.id !== editId);
-        tempSpeakers2 = [...tempSpeakers2, formValue];
-        tempSpeakers2.sort(function (a, b) {
-          return a.id - b.id;
+        const editingSpeakers=[...speakers]
+        const tempSpeakers = speakers.map((item) => {
+          if (item.id === editId) {
+            return { ...item, name, role, img };
+          }
+          return item;
         });
-        setSpeakers(tempSpeakers2);
-        setEdit(false)
-        setIsEditing(false);
-        setEditStatus(true)
-        // console.log("!idalreadyexisting ");
-        setbackToDefault()
-      } else {
-        setSpeakers(tempSpeakers);
-        setIsEditing(false);
-        setEdit(false)
-        setEditStatus(true)
-        setbackToDefault()
-      }
+
+
+        console.log(tempSpeakers);
+        const tempIds=tempSpeakers.map((item)=>item.id)
+        const otherSpeakersIds=tempIds.filter(item=>item!==parseInt(editId))
+        const inputValue=parseInt(idContainer.current.value)
+        
+        console.log(tempIds,otherSpeakersIds);
+        console.log(inputValue);
+        console.log(otherSpeakersIds.indexOf(inputValue))
+
+        // console.log((otherSpeakersIds.indexOf(parseInt(inputValue)))) 
+        let idAlreadyExisting
+
+        if(otherSpeakersIds.indexOf(parseInt(inputValue))===-1){
+          idAlreadyExisting=false
+        }else{
+          idAlreadyExisting=true
+        }
+        console.log(idAlreadyExisting);
+        if(idAlreadyExisting){
+          infoContainer.current.textContent =
+        "Id is already assigned to a a speaker. Use another Id";
+      idContainer.current.style.borderColor = "red";
+        }
+       
+        else if(!idAlreadyExisting && inputValue>tempIds.length){
+          const tempSpeakers2=speakers.filter(item=>item.id!==editId)
+          setSpeakers([...tempSpeakers2,formValue])
+          // setSpeakers(tempSpeakers);
+          idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+          nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+          roleContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+          imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+          infoContainer.current.textContent = "";
+          // const { name } = formValue;
+          setNotification(name);
+          setIdAssigned("");
+          setName("");
+          setRole("");
+          setImg("");
+          setIsEditing(false);
+          // setEdit(false)
+        } else if(!idAlreadyExisting){
+          const tempSpeakers3 = speakers.map((item) => {
+            
+            return item;
+          });
+          const array=[...tempSpeakers3,formValue]
+         let tempSpeakers4= array.sort(function(a,b){return a.id-b.id})
+        //  const tempSpeakers5=tempSpeakers4.filter((item)=>{
+           
+        //  })
+         const tempSpeakers5 = tempSpeakers4.map((item) => {
+          if (item.id === inputValue) {
+            return { ...item, name, role, img };
+          }
+          return item;
+        });
+        const tempspeakers6=tempSpeakers5.filter((item)=>item.id!==editId)
+  setSpeakers(tempspeakers6)
+  infoContainer.current.textContent = "";
+
+  setNotification(name);
+          setIdAssigned("");
+          setName("");
+          setRole("");
+          setImg("");
+          setIsEditing(false);
+        }
+        else{
+          setSpeakers(tempSpeakers);
+         idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+         nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+         roleContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+         imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+         infoContainer.current.textContent = "";
+         // const { name } = formValue;
+         setNotification(name);
+         setIdAssigned("");
+         setName("");
+         setRole("");
+         setImg("");
+         setIsEditing(false);
+        //  setEdit(false)
+        }
+        // const item = speakers.find((item) => item.id === parseInt(idAssigned));
+        
+     
     } else {
       setSpeakers((prevState) => {
         const newSpeakers = [...prevState, formValue];
         return newSpeakers;
       });
-      setEdit(false); 
-      setIsEditing(false);
-      setEditStatus(false)
-      setbackToDefault()
-      // console.log('no edit');
-    }
-  };
-
-  const setbackToDefault=()=>{
-    infoContainer.current.textContent = "";
-      idContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
-      nameContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
-      roleContainer.current.style.borderColor = "rgba(243, 244, 246,1)";
-      imgUrlContainer.current.style.borderColor = "rgba(243, 244, 246,1)";
+      // console.log(speakers);
+      // console.log("all complete");
+      infoContainer.current.textContent = "";
+      idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+      nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+      roleContainer.current.style.borderColor = "rgba(243, 244, 246,0.5)";
+      imgUrlContainer.current.style.borderColor = "rgba(243, 244, 246,0.5)";
+      const { name } = formValue;
       setNotification(name);
       setIdAssigned("");
       setName("");
       setRole("");
       setImg("");
-  }
+      setIsEditing(false);
+      setEdit(false)
+    }
+  };
 
   const handleEdit = (speakerId) => {
     if (!isEditing) {
       const item = speakers.find((item) => item.id === speakerId);
       // console.log(item);
       const { id, name, role, img } = item;
+      const tempSpeakers = speakers.filter((item) => item.id !== speakerId);
+      // setSpeakers(tempSpeakers);
       setIdAssigned(id);
       setName(name);
       setRole(role);
@@ -187,16 +248,16 @@ const CreateSpeakers = () => {
     }
     setEdit(true);
     setEditId(speakerId);
-    idContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
-    nameContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
-    roleContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
-    imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+    idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+    nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+    roleContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+    imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
   };
   const handleDelete = (speakerId) => {
     const tempSpeakers = speakers.filter((item) => item.id !== speakerId);
     setSpeakers(tempSpeakers);
   };
-
+  
   return (
     <div
       onMouseOver={() => closeSubmenuItems()}
@@ -215,8 +276,7 @@ const CreateSpeakers = () => {
               >
                 <p className=" text-base w-10/12">
                   <span className="font-semibold"> Success!</span> The speaker
-                  {` "${addedSpeaker}"`} has been successfully{" "}
-                  {editStatus ? "edited" : "added"}..
+                  {` "${addedSpeaker}"`} has been successfully {edit?"edited":"added"}..
                 </p>
                 <button onClick={() => setShowNotification(false)} className="">
                   <FaTimes />

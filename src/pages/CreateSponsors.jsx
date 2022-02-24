@@ -11,13 +11,16 @@ const CreateSponsors = () => {
   const [imgUrl, setImgUrl] = useState("");
   const [website, setWebsite] = useState("");
   const [edit, setEdit] = useState(false);
+  const [editStatus, setEditStatus] = useState(false);
+  const [editId, setEditId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [addedSpeaker, setAddedSpeaker] = useState("");
+  const [addedSponsor, setAddedSponsor] = useState("");
+
   const infoContainer = useRef(null);
   const idContainer = useRef(null);
   const nameContainer = useRef(null);
-  const imgUrlContainer = useRef(null);
-  const websiteContainer = useRef(null);
+  const urlContainer = useRef(null);
+  const webSiteContainer = useRef(null);
 
   const id = parseInt(idAssigned);
   let formValue = {
@@ -26,21 +29,18 @@ const CreateSponsors = () => {
     website,
     id,
   };
-  //   console.log(formValue);
   const handleChange = (e) => {
     const target = e.target;
     const name = target.name;
     const value = target.value;
-    e.target.style.borderColor = "rgba(243, 244, 246,0.4)"
-    // console.log(name, value);
-
+    e.target.style.borderColor = "rgba(243, 244, 246,1)";
     if (name === "id") {
       setIdAssigned(value);
     }
     if (name === "name") {
       setName(value);
     }
-    if (name === "img url") {
+    if (name === "imgUrl") {
       setImgUrl(value);
     }
     if (name === "website") {
@@ -48,7 +48,7 @@ const CreateSponsors = () => {
     }
   };
   const setNotification = (name) => {
-    setAddedSpeaker(name);
+    setAddedSponsor(name);
     setShowNotification(true);
     const timeout = setTimeout(() => {
       setShowNotification(false);
@@ -57,7 +57,7 @@ const CreateSponsors = () => {
   };
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    const item = sponsors.find((item) => item.id === parseInt(id));
+    const item = sponsors.find((item) => item.id === parseInt(idAssigned));
     // console.log(item);
     if (
       idAssigned === "" ||
@@ -66,12 +66,12 @@ const CreateSponsors = () => {
       name === "" ||
       imgUrl === "" ||
       website === "" ||
-      item
+      (item && !edit)
     ) {
       if (idAssigned === "") {
         idContainer.current.style.borderColor = "red";
       } else {
-        idContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
+        idContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
       }
       if (id === 0 || id < 0) {
         infoContainer.current.textContent =
@@ -83,83 +83,119 @@ const CreateSponsors = () => {
       if (nameContainer.current.value === "") {
         nameContainer.current.style.borderColor = "red";
       } else {
-        nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
+        nameContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
       }
-      if (imgUrlContainer.current.value === "") {
-        imgUrlContainer.current.style.borderColor = "red";
+      if (urlContainer.current.value === "") {
+        urlContainer.current.style.borderColor = "red";
       } else {
-        imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
+        urlContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
       }
-      if (websiteContainer.current.value === "") {
-        websiteContainer.current.style.borderColor = "red";
+      if (webSiteContainer.current.value === "") {
+        webSiteContainer.current.style.borderColor = "red";
       } else {
-        websiteContainer.current.style.borderColor = " rgba(243, 244, 246,0.3)";
+        webSiteContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
       }
       if (item) {
         infoContainer.current.textContent =
-          "Id is already assigned to a a speaker. Use another Id";
+          "Id is already assigned to a a sponsor. Use another Id";
         idContainer.current.style.borderColor = "red";
       }
     } else if (edit) {
-      setSponsors((prevState) => {
-        const newSponsors = [...prevState, formValue];
-        return newSponsors;
+      // console.log("edit is true");
+      const tempSponsors = sponsors.map((item) => {
+        if (item.id === editId) {
+          return { ...item, name, imgUrl, website };
+        }
+        return item;
       });
-      idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      websiteContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      infoContainer.current.textContent = "";
-      const { name } = formValue;
-      setNotification(name);
-      setIdAssigned("");
-      setName("");
-      setImgUrl("");
-      setWebsite("");
-      setIsEditing(false);
-      // console.log(edit);
+
+      // console.log(tempSponsors);
+      const tempIds = tempSponsors.map((item) => item.id);
+      const otherSponsorsIds = tempIds.filter(
+        (item) => item !== parseInt(editId)
+      );
+      const inputValue = parseInt(idContainer.current.value);
+      // console.log(tempIds, otherSponsorsIds);
+      // console.log(inputValue);
+      let idAlreadyExisting;
+      if (otherSponsorsIds.indexOf(parseInt(inputValue)) === -1) {
+        idAlreadyExisting = false;
+      } else {
+        idAlreadyExisting = true;
+      }
+      // console.log(idAlreadyExisting);
+      if (idAlreadyExisting) {
+        infoContainer.current.textContent =
+          "Id is already assigned to a a sponsor. Use another Id";
+        idContainer.current.style.borderColor = "red";
+      } else if (!idAlreadyExisting) {
+        let tempSponsors2 = sponsors.filter((item) => item.id !== editId);
+        tempSponsors2 = [...tempSponsors2, formValue];
+        tempSponsors2.sort(function (a, b) {
+          return a.id - b.id;
+        });
+        setSponsors(tempSponsors2);
+        setEdit(false)
+        setIsEditing(false);
+        setEditStatus(true)
+        // console.log("!idalreadyexisting ");
+        setbackToDefault()
+      } else {
+        setSponsors(tempSponsors);
+        setIsEditing(false);
+        setEdit(false)
+        setEditStatus(true)
+        setbackToDefault()
+      }
     } else {
       setSponsors((prevState) => {
         const newSponsors = [...prevState, formValue];
         return newSponsors;
       });
-      // console.log(sponsors);
-      // console.log("all complete");
-      infoContainer.current.textContent = "";
-      idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      imgUrlContainer.current.style.borderColor = "rgba(243, 244, 246,0.5)";
-      websiteContainer.current.style.borderColor = "rgba(243, 244, 246,0.5)";
-      const { name } = formValue;
+      setEdit(false); 
+      setIsEditing(false);
+      setEditStatus(false)
+      setbackToDefault()
+      // console.log('no edit');
+    }
+  };
+
+  const setbackToDefault=()=>{
+    infoContainer.current.textContent = "";
+      idContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+      nameContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+      urlContainer.current.style.borderColor = "rgba(243, 244, 246,1)";
+      webSiteContainer.current.style.borderColor = "rgba(243, 244, 246,1)";
       setNotification(name);
       setIdAssigned("");
       setName("");
       setImgUrl("");
       setWebsite("");
-      setIsEditing(false);
-    }
-  };
+  }
 
   const handleEdit = (sponsorId) => {
     if (!isEditing) {
       const item = sponsors.find((item) => item.id === sponsorId);
       // console.log(item);
       const { id, name, imgUrl, website } = item;
-      const tempSponsors = sponsors.filter((item) => item.id !== sponsorId);
-      setSponsors(tempSponsors);
       setIdAssigned(id);
       setName(name);
       setImgUrl(imgUrl);
       setWebsite(website);
-      setEdit(true);
       setIsEditing(true);
     }
+    setEdit(true);
+    setEditId(sponsorId);
+    idContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+    nameContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+    urlContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
+    webSiteContainer.current.style.borderColor = " rgba(243, 244, 246,1)";
   };
   const handleDelete = (sponsorId) => {
     const tempSponsors = sponsors.filter((item) => item.id !== sponsorId);
     setSponsors(tempSponsors);
   };
+
   return (
     <div
       onMouseOver={() => closeSubmenuItems()}
@@ -178,7 +214,8 @@ const CreateSponsors = () => {
               >
                 <p className=" text-base w-10/12">
                   <span className="font-semibold"> Success!</span> The sponsor
-                  {` "${addedSpeaker}"`} has been successfully added..
+                  {` "${addedSponsor}"`} has been successfully{" "}
+                  {editStatus ? "edited" : "added"}..
                 </p>
                 <button onClick={() => setShowNotification(false)} className="">
                   <FaTimes />
@@ -233,13 +270,13 @@ const CreateSponsors = () => {
 
                     <div className="flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 ">
                       <label htmlFor="type" className="capitalize">
-                        img Url
+                        imgUrl
                       </label>
                       <input
-                        ref={imgUrlContainer}
+                        ref={urlContainer}
                         type="text"
-                        name="img url"
-                        id="img url"
+                        name="imgUrl"
+                        id="imgUrl"
                         value={imgUrl}
                         onChange={handleChange}
                         className="p-2 rounded border border-gray-100 w-full"
@@ -251,7 +288,7 @@ const CreateSponsors = () => {
                         website
                       </label>
                       <input
-                        ref={websiteContainer}
+                        ref={webSiteContainer}
                         type="text"
                         name="website"
                         id="website"
@@ -267,7 +304,7 @@ const CreateSponsors = () => {
                         onClick={handleFormSubmit}
                         className="py-2 px-3 text-sm font-semibold text-white bg-purple-light capitalize hover:bg-purple-light-2 rounded"
                       >
-                       {`${isEditing?'edit':'submit'}`}
+                        {`${isEditing ? "edit" : "submit"}`}
                       </button>
                     </div>
                   </div>
@@ -280,7 +317,7 @@ const CreateSponsors = () => {
                 <div className="px-6 pt-5 pb-5 border-b border-gray-100">
                   <h1 className="capitalize text-lg font-normal tracking-wider text-gray-main ">
                     sponsors
-                  </h1> 
+                  </h1>
                 </div>
                 <div className="pt-7 pb-9 px-6 mt-2 ">
                   <table className="table-fixed   text-gray-light-2 text-sm w-full ">
@@ -295,11 +332,11 @@ const CreateSponsors = () => {
                         <th className=" text-left w-3/12 sm:w-4/12 sm:w- px-0 sm:px-3 border border-gray-100">
                           name
                         </th>
-                        <th className=" text-left w-3/12 px-1 sm:px-3 border border-gray-100">
-                          Img URL
+                        <th className=" text-left w-5/12 px-1 sm:px-3 border border-gray-100">
+                          imgUrl
                         </th>
-                        <th className="text-left w-5/12 px-1 sm:px-3 border border-gray-100 ">
-                          website
+                        <th className="text-left w-3/12 px-1 sm:px-3 border border-gray-100 ">
+                          website 
                         </th>
                         <th className="text-left w-2/12 px-1 sm:px-3 border border-gray-100">
                           action

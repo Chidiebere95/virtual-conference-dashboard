@@ -100,4 +100,63 @@ router.delete('/remove', auth, async (req, res) => {
     console.error(err.message);
   }
 });
+
+router.put('/edit', auth, async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().min(1),
+    company: Joi.string().min(1),
+    position: Joi.string().min(1),
+    avatar: Joi.string().uri(),
+  });
+  const { id } = req.query;
+  try {
+    //validate user data
+    await schema.validateAsync(req.body, {
+      abortEarly: false,
+    });
+  } catch (err) {
+    const errorMessage = {
+      status: 'failed',
+      error: convertJoiErrorToArray(err.message),
+    };
+    res.status(400).json(errorMessage);
+    return;
+  }
+  try {
+    const speaker = await Speaker.findOne({ _id: id });
+
+    if (!speaker) {
+      res.status(401).send({
+        status: 'failed',
+        message: 'No such speakers found',
+      });
+      return;
+    }
+    const { name, company, position, avatar } = req.body;
+    if (name === '' && company === '' && position === '' && avatar === '') {
+      res.status(401).send({
+        status: 'failed',
+        message: 'No data to update',
+      });
+
+      return;
+    }
+    const update = {};
+    if (name) update.name = name;
+    if (company) update.company = company;
+    if (position) update.position = position;
+    if (avatar) update.avatar = avatar;
+    await Speaker.findOneAndUpdate({ _id: id }, update);
+
+    const updatedSpeaker = await Speaker.findOne({ _id: id });
+    res.status(200).send({
+      status: 'success',
+      message: 'Speaker updated successfully',
+      data: updatedSpeaker,
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;

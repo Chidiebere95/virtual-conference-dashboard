@@ -1,48 +1,50 @@
-import React, { useState, useRef, useEffect } from "react";
-import { FaEdit, FaTimes, FaTrash } from "react-icons/fa";
-import { useGlobalContext } from "../context";
-import { eventOrganizers } from "../data";
+import React, { useState, useRef, useEffect } from 'react';
+import { FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
+import axios from '../utils/axios';
+import { useGlobalContext } from '../context';
+import { eventOrganizers } from '../data';
 
 const Speakers = () => {
-  const { closeSubmenuItems, getSpeakersFormData } = useGlobalContext();
+  const { closeSubmenuItems } = useGlobalContext();
   const [showNotification, setShowNotification] = useState(false);
   const [speakers, setSpeakers] = useState(eventOrganizers);
-  const [idAssigned, setIdAssigned] = useState("");
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
-  const [img, setImg] = useState("");
-  const [addedSpeaker, setAddedSpeaker] = useState("");
-  const infoContainer = useRef(null);
-  const idContainer = useRef(null);
-  const nameContainer = useRef(null);
-  const roleContainer = useRef(null);
-  const imgUrlContainer = useRef(null);
+  const [name, setName] = useState('');
+  const [position, setPosition] = useState('');
+  const [avatar, setAvatar] = useState('');
+  const [company, setCompany] = useState('');
+  const [addedSpeaker, setAddedSpeaker] = useState('');
+  const [idToEdit, setIdToEdit] = useState('');
+  const [editMode, setEditMode] = useState(false);
 
-  const id = parseInt(idAssigned);
+  // Refs
+  const nameContainer = useRef(null);
+  const positionContainer = useRef(null);
+  const avatarUrlContainer = useRef(null);
+  const companyContainer = useRef(null);
+
   let formValue = {
     name,
-    role,
-    img,
-    id,
+    position,
+    avatar,
+    company,
   };
   //   console.log(formValue);
   const handleChange = (e) => {
     const target = e.target;
     const name = target.name;
-    const value =  target.value;
-    // console.log(name, value);
+    const value = target.value;
 
-    if (name === "id") {
-      setIdAssigned(value);
+    if (name === 'company') {
+      setCompany(value);
     }
-    if (name === "name") {
+    if (name === 'name') {
       setName(value);
     }
-    if (name === "role") {
-      setRole(value);
+    if (name === 'position') {
+      setPosition(value);
     }
-    if (name === "image url") {
-      setImg(value);
+    if (name === 'avatar') {
+      setAvatar(value);
     }
   };
   const setNotification = (name) => {
@@ -51,260 +53,374 @@ const Speakers = () => {
   };
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    const item = speakers.find((item) => item.id === parseInt(id));
-    console.log(item);
-    if (
-      idAssigned === "" ||
-      id === 0 ||
-      id < 0 ||
-      name === "" ||
-      role === "" ||
-      img === "" ||
-      item 
-    ) {
-      if (idAssigned === "") {
-        idContainer.current.style.borderColor = "red";
+    if (company === '' || name === '' || position === '' || avatar === '') {
+      if (nameContainer.current.value === '') {
+        nameContainer.current.style.borderColor = 'red';
+        return;
       } else {
-        idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
+        nameContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
       }
-      if (id === 0 || id < 0) {
-        infoContainer.current.textContent =
-          "Id cannot be zero or less than zero";
+      if (positionContainer.current.value === '') {
+        positionContainer.current.style.borderColor = 'red';
+        return;
       } else {
-        infoContainer.current.textContent = "";
+        positionContainer.current.style.borderColor =
+          ' rgba(243, 244, 246,0.5)';
       }
+      if (avatarUrlContainer.current.value === '') {
+        avatarUrlContainer.current.style.borderColor = 'red';
+        return;
+      } else {
+        avatarUrlContainer.current.style.borderColor =
+          ' rgba(243, 244, 246,0.5)';
+      }
+      if (companyContainer.current.value === '') {
+        companyContainer.current.style.borderColor = 'red';
+        return;
+      } else {
+        companyContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
+      }
+    } else {
+      axios
+        .post('/speakers/add', formValue, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        })
+        .then((res) => {
+          setSpeakers((prevState) => {
+            const newSpeakers = [...prevState, formValue];
+            return newSpeakers;
+          });
 
-      if (nameContainer.current.value === "") {
-        nameContainer.current.style.borderColor = "red";
-      } else {
-        nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      }
-      if (roleContainer.current.value === "") {
-        roleContainer.current.style.borderColor = "red";
-      } else {
-        roleContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      }
-      if (imgUrlContainer.current.value === "") {
-        imgUrlContainer.current.style.borderColor = "red";
-      } else {
-        imgUrlContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      }
-      if (item) {
-        infoContainer.current.textContent =
-          "Id is already assigned to a a speaker. Use another Id";
-          idContainer.current.style.borderColor="red"
-      }
-    } 
-    else {
-      setSpeakers((prevState)=>{
-        const newSpeakers=[...prevState, formValue]
-        return(newSpeakers)
-      });
-      // console.log(speakers);
-      // console.log("all complete");
-      infoContainer.current.textContent = "";
-      idContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      nameContainer.current.style.borderColor = " rgba(243, 244, 246,0.5)";
-      roleContainer.current.style.borderColor = "rgba(243, 244, 246,0.5)";
-      imgUrlContainer.current.style.borderColor = "rgba(243, 244, 246,0.5)";
-      const { name } = formValue;
-      setNotification(name);
-      setIdAssigned("");
-      setName("");
-      setRole("");
-      setImg("");
-      // console.log(speakers);
+          nameContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
+          positionContainer.current.style.borderColor =
+            'rgba(243, 244, 246,0.5)';
+          avatarUrlContainer.current.style.borderColor =
+            'rgba(243, 244, 246,0.5)';
+          companyContainer.current.style.borderColor =
+            'rgba(243, 244, 246,0.5)';
+          const { name } = formValue;
+          setNotification(name);
+          setCompany('');
+          setName('');
+          setPosition('');
+          setAvatar('');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
-  const handleEdit = (speakerId) => {
-    const item = speakers.find((item) => item.id === speakerId);
-    const{id,name,role,img}=item 
-    const tempSpeakers=speakers.filter(item=>item.id!==speakerId)
-    setSpeakers(tempSpeakers) 
-    console.log(tempSpeakers);
-    setIdAssigned(id);
-      setName(name);
-      setRole(role);
-      setImg(img);
-    console.log(item);  
-  }; 
+  const handleEdit = (e, speakerId) => {
+    e.preventDefault();
+    const updatePayload = {};
+
+    if (name) updatePayload.name = name;
+    if (company) updatePayload.company = company;
+    if (position) updatePayload.position = position;
+    if (avatar) updatePayload.avatar = avatar;
+
+    axios
+      .put(`/speakers/edit?id=${speakerId}`, updatePayload)
+      .then((res) => {
+        const tempSpeaker = res.data.data;
+        console.log(tempSpeaker);
+
+        setSpeakers((prevState) => {
+          const newSpeakers = [
+            ...prevState.filter((item) => item._id !== speakerId),
+            tempSpeaker,
+          ];
+          return newSpeakers;
+        });
+
+        setCompany('');
+        setName('');
+        setPosition('');
+        setAvatar('');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const handleDelete = (speakerId) => {
-    const tempSpeakers=speakers.filter(item=>item.id!==speakerId)
-    setSpeakers(tempSpeakers) 
-  }; 
+    axios.delete(`/speakers/remove?id=${speakerId}`).then((res) => {
+      const tempSpeakers = speakers.filter((item) => item._id !== speakerId);
+      setSpeakers(tempSpeakers);
+    });
+  };
+  useEffect(() => {
+    axios.get('/speakers').then((res) => {
+      setSpeakers(res.data.data);
+    });
+  }, []);
   return (
     <div
       onMouseOver={() => closeSubmenuItems()}
-      className="ml-16 bg-gray-main flex-1"
+      className='ml-16 bg-gray-main flex-1'
     >
-      <div className="px-4 md:px-14 md:pt-6 lg:pt-2 lg:px-6  ">
-        <div className="mt-4 ">
-          <div className="flex flex-col lg:flex-row gap-x-10">
-            <div className="flex flex-col gap-y-6 lg:w-4/12">
+      <div className='px-4 md:px-14 md:pt-6 lg:pt-2 lg:px-6  '>
+        <div className='mt-4 '>
+          <div className='flex flex-col lg:flex-row gap-x-10'>
+            <div className='flex flex-col gap-y-6 lg:w-4/12'>
               <section
                 className={`${
                   showNotification
-                    ? " rounded bg-green-light px-4 py-3 flex  sm:flex-row justify-between items-center shadow-sm gap-y-4 text-white lg:max-w-6xl mx-auto"
-                    : "hidden"
+                    ? ' rounded bg-green-light px-4 py-3 flex  sm:flex-row justify-between items-center shadow-sm gap-y-4 text-white lg:max-w-6xl mx-auto'
+                    : 'hidden'
                 }`}
               >
-                <p className=" text-base w-10/12">
-                  <span className="font-semibold"> Success!</span> The speaker
+                <p className=' text-base w-10/12'>
+                  <span className='font-semibold'> Success!</span> The speaker
                   {` "${addedSpeaker}"`} has been successfully added..
                 </p>
-                <button onClick={() => setShowNotification(false)} className="">
+                <button onClick={() => setShowNotification(false)} className=''>
                   <FaTimes />
                 </button>
               </section>
-              <section className="mb-8  lg:max-w-6xl mx-auto  w-full bg-white">
-                {/* single item */}
-                <form action="" className="">
-                  <div className="rounded  shadow-sm w-full ">
-                    <div className="px-6 pt-5 pb-5 border-b border-gray-100">
-                      <h1 className="capitalize text-lg font-medium tracking-wider text-gray-main ">
-                        Create speaker
-                      </h1>
-                    </div>
-                    <div className="flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 ">
-                      <div className="flex gap-x-4">
-                        <label htmlFor="type" className="capitalize">
-                          id
-                        </label>
-                        <h5
-                          ref={infoContainer}
-                          className="px-6 mb-2 text-red-500"
-                        >{""}</h5>
+              <section className='mb-8  lg:max-w-6xl mx-auto  w-full bg-white'>
+                {/* Start of Edit Mode Wrapper */}
+                <form action='' className=''>
+                  {editMode ? (
+                    <div className='rounded  shadow-sm w-full '>
+                      <div className='px-6 pt-5 pb-5 border-b border-gray-100 flex justify-between'>
+                        <h1 className='capitalize text-lg font-medium tracking-wider text-gray-main '>
+                          Edit speaker
+                        </h1>
+                        <button
+                          className='py-2 px-3 text-sm font-semibold text-white bg-red-light capitalize hover:bg-purple-light-2 rounded'
+                          onClick={() => setEditMode(false)}
+                        >
+                          <FaTimes />
+                        </button>
                       </div>
-                      <input
-                        ref={idContainer}
-                        type="number"
-                        name="id"
-                        id="id"
-                        value={idAssigned}
-                        onChange={handleChange}
-                        className="p-2 rounded border border-gray-100 w-full"
-                      />
-                    </div>
 
-                    <div className="flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 ">
-                      <label htmlFor="type" className="capitalize">
-                        name
-                      </label>
-                      <input
-                        ref={nameContainer}
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={name}
-                        onChange={handleChange}
-                        className="p-2 rounded border border-gray-100 w-full"
-                      />
-                    </div>
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          name
+                        </label>
+                        <input
+                          ref={nameContainer}
+                          type='text'
+                          name='name'
+                          id='name'
+                          value={name}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          company
+                        </label>
+                        <input
+                          ref={companyContainer}
+                          type='text'
+                          name='company'
+                          id='company'
+                          value={company}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
 
-                    <div className="flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 ">
-                      <label htmlFor="type" className="capitalize">
-                        role
-                      </label>
-                      <input
-                        ref={roleContainer}
-                        type="text"
-                        name="role"
-                        id="role"
-                        value={role}
-                        onChange={handleChange}
-                        className="p-2 rounded border border-gray-100 w-full"
-                      />
-                    </div>
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          position
+                        </label>
+                        <input
+                          ref={positionContainer}
+                          type='text'
+                          name='position'
+                          id='position'
+                          value={position}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
 
-                    <div className="flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 ">
-                      <label htmlFor="type" className="capitalize">
-                        image URL
-                      </label>
-                      <input
-                        ref={imgUrlContainer}
-                        type="text"
-                        name="image url"
-                        id="image url"
-                        value={img}
-                        onChange={handleChange}
-                        className="p-2 rounded border border-gray-100 w-full"
-                      />
-                    </div>
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          Avatar URL
+                        </label>
+                        <input
+                          ref={avatarUrlContainer}
+                          type='text'
+                          name='avatar'
+                          id='avatar'
+                          value={avatar}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
 
-                    <div className="px-6 pb-4">
-                      <button
-                        type="submit"
-                        onClick={handleFormSubmit}
-                        className="py-2 px-3 text-sm font-semibold text-white bg-purple-light capitalize hover:bg-purple-light-2 rounded"
-                      >
-                        submit
-                      </button>
+                      <div className='px-6 pb-4'>
+                        <button
+                          type='submit'
+                          onClick={(e) => handleEdit(e, idToEdit)}
+                          className='py-2 px-3 text-sm font-semibold text-white bg-purple-light capitalize hover:bg-purple-light-2 rounded'
+                        >
+                          submit
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className='rounded  shadow-sm w-full '>
+                      <div className='px-6 pt-5 pb-5 border-b border-gray-100'>
+                        <h1 className='capitalize text-lg font-medium tracking-wider text-gray-main '>
+                          Create speaker
+                        </h1>
+                      </div>
+
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          name
+                        </label>
+                        <input
+                          ref={nameContainer}
+                          type='text'
+                          name='name'
+                          id='name'
+                          value={name}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          company
+                        </label>
+                        <input
+                          ref={companyContainer}
+                          type='text'
+                          name='company'
+                          id='company'
+                          value={company}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
+
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          position
+                        </label>
+                        <input
+                          ref={positionContainer}
+                          type='text'
+                          name='position'
+                          id='position'
+                          value={position}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
+
+                      <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
+                        <label htmlFor='type' className='capitalize'>
+                          Avatar URL
+                        </label>
+                        <input
+                          ref={avatarUrlContainer}
+                          type='text'
+                          name='avatar'
+                          id='avatar'
+                          value={avatar}
+                          onChange={handleChange}
+                          className='p-2 rounded border border-gray-100 w-full'
+                        />
+                      </div>
+
+                      <div className='px-6 pb-4'>
+                        <button
+                          type='submit'
+                          onClick={handleFormSubmit}
+                          className='py-2 px-3 text-sm font-semibold text-white bg-purple-light capitalize hover:bg-purple-light-2 rounded'
+                        >
+                          submit
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </form>
+                {/* End of Edit Mode Wrapper */}
               </section>
             </div>
-            <section className="mb-8 lg:w-8/12 mx-auto">
+            <section className='mb-8 lg:w-8/12 mx-auto'>
               {/* single item */}
-              <div className="rounded bg-white shadow-sm  ">
-                <div className="px-6 pt-5 pb-5 border-b border-gray-100">
-                  <h1 className="capitalize text-lg font-normal tracking-wider text-gray-main ">
+              <div className='rounded bg-white shadow-sm  '>
+                <div className='px-6 pt-5 pb-5 border-b border-gray-100'>
+                  <h1 className='capitalize text-lg font-normal tracking-wider text-gray-main '>
                     speakers
                   </h1>
                 </div>
-                <div className="pt-7 pb-9 px-6 mt-2 ">
-                  <table className="table-fixed   text-gray-light-2 text-sm w-full ">
+                <div className='pt-7 pb-9 px-6 mt-2 '>
+                  <table className='table-fixed   text-gray-light-2 text-sm w-full '>
                     <thead>
-                      <tr className="text-gray-light-2   h-12 uppercase text-xs text-center">
-                        <th className=" text-left w-1/12 sm:w- px-0 sm:px-3 border border-gray-100">
+                      <tr className='text-gray-light-2   h-12 uppercase text-xs text-center'>
+                        <th className=' text-left w-1/12 sm:w- px-0 sm:px-3 border border-gray-100'>
                           #
                         </th>
-                        <th className=" text-left w-1/12 sm:w- px-0 sm:px-3 border border-gray-100">
-                          id
-                        </th>
-                        <th className=" text-left w-3/12 sm:w-4/12 sm:w- px-0 sm:px-3 border border-gray-100">
+                        <th className=' text-left w-1/12 sm:w- px-0 sm:px-3 border border-gray-100'></th>
+                        <th className=' text-left w-3/12 sm:w-4/12 sm:w- px-0 sm:px-3 border border-gray-100'>
                           name
                         </th>
-                        <th className=" text-left w-3/12 px-1 sm:px-3 border border-gray-100">
-                          role
+                        <th className=' text-left w-3/12 px-1 sm:px-3 border border-gray-100'>
+                          position
                         </th>
-                        <th className="text-left w-5/12 px-1 sm:px-3 border border-gray-100 ">
-                          img URL
+                        <th className='text-left w-5/12 px-1 sm:px-3 border border-gray-100 '>
+                          company
                         </th>
-                        <th className="text-left w-2/12 px-1 sm:px-3 border border-gray-100">
+                        <th className='text-left w-2/12 px-1 sm:px-3 border border-gray-100'>
                           action
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {speakers.map((item, index) => {
-                        const { id, name, role, img } = item;
+                        const { _id, name, position, avatar, company } = item;
                         return (
-                          <tr key={id} className="h-12 font-semibold capitalize">
-                            <td className="  sm:text-base  border border-gray-100 capitalize px-0 sm:px-3">
-                              {index+1}
+                          <tr
+                            key={index}
+                            className='h-12 font-semibold capitalize'
+                          >
+                            <td className='  sm:text-base  border border-gray-100 capitalize px-0 sm:px-3'>
+                              {index + 1}
                             </td>
-                            <td className="  sm:text-base  border border-gray-100 capitalize px-0 sm:px-3">
-                              {id}
+                            <td className='  sm:text-base  border border-gray-100 capitalize px-0 sm:px-3'>
+                              <img
+                                className='table-avatar avatar'
+                                src={avatar}
+                                alt={name}
+                              />
                             </td>
-                            <td className=" border border-gray-100 px-1 sm:px-3">
+                            <td className=' border border-gray-100 px-1 sm:px-3'>
                               {name}
                             </td>
-                            <td className="text-left px-1 sm:px-3 font-semibold  border border-gray-100">
-                              {role}
+                            <td className='text-left px-1 sm:px-3 font-semibold  border border-gray-100'>
+                              {position}
                             </td>
-                            <td className="text-left px-1 sm:px-3  border border-gray-100">
-                              {img}
+                            <td className='text-left px-1 sm:px-3  border border-gray-100'>
+                              {company}
                             </td>
-                            <td className="text-left px-3  border border-gray-100 flex gap-x-2 items-center h-12">
+                            <td className='text-left px-3  border border-gray-100 flex gap-x-2 items-center h-12'>
                               <button
-                                onClick={() => handleEdit(id)}
-                                className=""
+                                onClick={() => {
+                                  setEditMode(true);
+                                  setIdToEdit(_id);
+                                }}
+                                className=''
                               >
                                 <FaEdit />
                               </button>
-                              <button onClick={() => handleDelete(id)} className="">
+                              <span> </span>
+                              <button
+                                onClick={() => handleDelete(_id)}
+                                className=''
+                              >
                                 <FaTrash />
                               </button>
                             </td>
@@ -318,7 +434,7 @@ const Speakers = () => {
             </section>
           </div>
 
-          <section className="mb-8 ">
+          <section className='mb-8 '>
             {/* single item */}
             {/* <div className="rounded bg-white shadow-sm  ">
               <div className="px-6 pt-5 pb-5 border-b border-gray-100">

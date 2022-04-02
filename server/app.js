@@ -1,4 +1,5 @@
 const express = require('express');
+var cors = require('cors');
 const connectDB = require('./db/index');
 const adminRoutes = require('./routes/admin');
 const sponsorsRoutes = require('./routes/sponsors');
@@ -7,8 +8,11 @@ const rsvpRoutes = require('./routes/rsvps');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
+app.use(cors());
+
+const PORT = process.env.PORT || 4000;
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/admin', adminRoutes);
 app.use('/sponsors', sponsorsRoutes);

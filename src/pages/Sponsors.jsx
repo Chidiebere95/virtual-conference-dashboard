@@ -4,29 +4,26 @@ import axios from '../utils/axios';
 import { useGlobalContext } from '../context';
 import Layout from '../components/Layout';
 
-const Speakers = () => {
+const Sponsors = () => {
   const { closeSubmenuItems } = useGlobalContext();
   const [showNotification, setShowNotification] = useState(false);
-  const [speakers, setSpeakers] = useState([]);
+  const [sponsors, setSponsors] = useState([]);
   const [name, setName] = useState('');
-  const [position, setPosition] = useState('');
-  const [avatar, setAvatar] = useState('');
-  const [company, setCompany] = useState('');
+  const [icon, setIcon] = useState('');
+  const [website, setWebsite] = useState('');
   const [addedSpeaker, setAddedSpeaker] = useState('');
   const [idToEdit, setIdToEdit] = useState('');
   const [editMode, setEditMode] = useState(false);
 
   // Refs
   const nameContainer = useRef(null);
-  const positionContainer = useRef(null);
-  const avatarUrlContainer = useRef(null);
-  const companyContainer = useRef(null);
+  const iconUrlContainer = useRef(null);
+  const websiteContainer = useRef(null);
 
   let formValue = {
     name,
-    position,
-    avatar,
-    company,
+    website,
+    icon,
   };
   //   console.log(formValue);
   const handleChange = (e) => {
@@ -34,17 +31,15 @@ const Speakers = () => {
     const name = target.name;
     const value = target.value;
 
-    if (name === 'company') {
-      setCompany(value);
+    if (name === 'website') {
+      setWebsite(value);
     }
     if (name === 'name') {
       setName(value);
     }
-    if (name === 'position') {
-      setPosition(value);
-    }
-    if (name === 'avatar') {
-      setAvatar(value);
+
+    if (name === 'icon') {
+      setIcon(value);
     }
   };
   const setNotification = (name) => {
@@ -53,60 +48,49 @@ const Speakers = () => {
   };
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (company === '' || name === '' || position === '' || avatar === '') {
+    if (website === '' || name === '' || icon === '') {
       if (nameContainer.current.value === '') {
         nameContainer.current.style.borderColor = 'red';
         return;
       } else {
         nameContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
       }
-      if (positionContainer.current.value === '') {
-        positionContainer.current.style.borderColor = 'red';
+      if (iconUrlContainer.current.value === '') {
+        iconUrlContainer.current.style.borderColor = 'red';
         return;
       } else {
-        positionContainer.current.style.borderColor =
-          ' rgba(243, 244, 246,0.5)';
+        iconUrlContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
       }
-      if (avatarUrlContainer.current.value === '') {
-        avatarUrlContainer.current.style.borderColor = 'red';
+      if (websiteContainer.current.value === '') {
+        websiteContainer.current.style.borderColor = 'red';
         return;
       } else {
-        avatarUrlContainer.current.style.borderColor =
-          ' rgba(243, 244, 246,0.5)';
-      }
-      if (companyContainer.current.value === '') {
-        companyContainer.current.style.borderColor = 'red';
-        return;
-      } else {
-        companyContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
+        websiteContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
       }
     } else {
       axios
-        .post('/speakers/add', formValue, {
+        .post('/sponsors/add', formValue, {
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
           },
         })
         .then((res) => {
-          setSpeakers((prevState) => {
-            const newSpeakers = [...prevState, formValue];
-            return newSpeakers;
+          setSponsors((prevState) => {
+            const newsponsors = [...prevState, formValue];
+            return newsponsors;
           });
 
           nameContainer.current.style.borderColor = ' rgba(243, 244, 246,0.5)';
-          positionContainer.current.style.borderColor =
+          iconUrlContainer.current.style.borderColor =
             'rgba(243, 244, 246,0.5)';
-          avatarUrlContainer.current.style.borderColor =
-            'rgba(243, 244, 246,0.5)';
-          companyContainer.current.style.borderColor =
+          websiteContainer.current.style.borderColor =
             'rgba(243, 244, 246,0.5)';
           const { name } = formValue;
           setNotification(name);
-          setCompany('');
+          setWebsite('');
           setName('');
-          setPosition('');
-          setAvatar('');
+          setIcon('');
         })
         .catch((err) => {
           console.log(err);
@@ -119,42 +103,41 @@ const Speakers = () => {
     const updatePayload = {};
 
     if (name) updatePayload.name = name;
-    if (company) updatePayload.company = company;
-    if (position) updatePayload.position = position;
-    if (avatar) updatePayload.avatar = avatar;
+    if (website) updatePayload.website = website;
+    if (icon) updatePayload.icon = icon;
 
     axios
-      .put(`/speakers/edit?id=${speakerId}`, updatePayload)
+      .put(`/sponsors/edit?id=${speakerId}`, updatePayload)
       .then((res) => {
         const tempSpeaker = res.data.data;
         console.log(tempSpeaker);
 
-        setSpeakers((prevState) => {
-          const newSpeakers = [
+        setSponsors((prevState) => {
+          const newsponsors = [
             ...prevState.filter((item) => item._id !== speakerId),
             tempSpeaker,
           ];
-          return newSpeakers;
+          return newsponsors;
         });
 
-        setCompany('');
+        setWebsite('');
         setName('');
-        setPosition('');
-        setAvatar('');
+        setIcon('');
       })
       .catch((err) => {
         console.log(err);
       });
   };
   const handleDelete = (speakerId) => {
-    axios.delete(`/speakers/remove?id=${speakerId}`).then((res) => {
-      const tempSpeakers = speakers.filter((item) => item._id !== speakerId);
-      setSpeakers(tempSpeakers);
+    axios.delete(`/sponsors/remove?id=${speakerId}`).then((res) => {
+      const tempsponsors = sponsors.filter((item) => item._id !== speakerId);
+      setSponsors(tempsponsors);
     });
   };
   useEffect(() => {
-    axios.get('/speakers').then((res) => {
-      setSpeakers(res.data.data);
+    axios.get('/sponsors').then((res) => {
+      console.log(res.data.data);
+      setSponsors(res.data.data);
     });
   }, []);
   return (
@@ -218,14 +201,14 @@ const Speakers = () => {
                         </div>
                         <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
                           <label htmlFor='type' className='capitalize'>
-                            company
+                            website
                           </label>
                           <input
-                            ref={companyContainer}
+                            ref={websiteContainer}
                             type='text'
-                            name='company'
-                            id='company'
-                            value={company}
+                            name='website'
+                            id='website'
+                            value={website}
                             onChange={handleChange}
                             className='p-2 rounded border border-gray-100 w-full'
                           />
@@ -233,29 +216,14 @@ const Speakers = () => {
 
                         <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
                           <label htmlFor='type' className='capitalize'>
-                            position
+                            icon URL
                           </label>
                           <input
-                            ref={positionContainer}
+                            ref={iconUrlContainer}
                             type='text'
-                            name='position'
-                            id='position'
-                            value={position}
-                            onChange={handleChange}
-                            className='p-2 rounded border border-gray-100 w-full'
-                          />
-                        </div>
-
-                        <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
-                          <label htmlFor='type' className='capitalize'>
-                            Avatar URL
-                          </label>
-                          <input
-                            ref={avatarUrlContainer}
-                            type='text'
-                            name='avatar'
-                            id='avatar'
-                            value={avatar}
+                            name='icon'
+                            id='icon'
+                            value={icon}
                             onChange={handleChange}
                             className='p-2 rounded border border-gray-100 w-full'
                           />
@@ -295,14 +263,14 @@ const Speakers = () => {
                         </div>
                         <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
                           <label htmlFor='type' className='capitalize'>
-                            company
+                            website
                           </label>
                           <input
-                            ref={companyContainer}
+                            ref={websiteContainer}
                             type='text'
-                            name='company'
-                            id='company'
-                            value={company}
+                            name='website'
+                            id='website'
+                            value={website}
                             onChange={handleChange}
                             className='p-2 rounded border border-gray-100 w-full'
                           />
@@ -310,29 +278,14 @@ const Speakers = () => {
 
                         <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
                           <label htmlFor='type' className='capitalize'>
-                            position
+                            icon URL
                           </label>
                           <input
-                            ref={positionContainer}
+                            ref={iconUrlContainer}
                             type='text'
-                            name='position'
-                            id='position'
-                            value={position}
-                            onChange={handleChange}
-                            className='p-2 rounded border border-gray-100 w-full'
-                          />
-                        </div>
-
-                        <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
-                          <label htmlFor='type' className='capitalize'>
-                            Avatar URL
-                          </label>
-                          <input
-                            ref={avatarUrlContainer}
-                            type='text'
-                            name='avatar'
-                            id='avatar'
-                            value={avatar}
+                            name='icon'
+                            id='icon'
+                            value={icon}
                             onChange={handleChange}
                             className='p-2 rounded border border-gray-100 w-full'
                           />
@@ -358,7 +311,7 @@ const Speakers = () => {
                 <div className='rounded bg-white shadow-sm  '>
                   <div className='px-6 pt-5 pb-5 border-b border-gray-100'>
                     <h1 className='capitalize text-lg font-normal tracking-wider text-gray-main '>
-                      speakers
+                      sponsors
                     </h1>
                   </div>
                   <div className='pt-7 pb-9 px-6 mt-2 '>
@@ -372,11 +325,9 @@ const Speakers = () => {
                           <th className=' text-left w-3/12 sm:w-4/12 sm:w- px-0 sm:px-3 border border-gray-100'>
                             name
                           </th>
-                          <th className=' text-left w-3/12 px-1 sm:px-3 border border-gray-100'>
-                            position
-                          </th>
+
                           <th className='text-left w-5/12 px-1 sm:px-3 border border-gray-100 '>
-                            company
+                            website
                           </th>
                           <th className='text-left w-2/12 px-1 sm:px-3 border border-gray-100'>
                             action
@@ -384,8 +335,8 @@ const Speakers = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {speakers.map((item, index) => {
-                          const { _id, name, position, avatar, company } = item;
+                        {sponsors.map((item, index) => {
+                          const { _id, name, icon, website } = item;
                           return (
                             <tr
                               key={index}
@@ -396,19 +347,17 @@ const Speakers = () => {
                               </td>
                               <td className='  sm:text-base  border border-gray-100 capitalize px-0 sm:px-3'>
                                 <img
-                                  className='table-avatar avatar'
-                                  src={avatar}
+                                  className='table-icon icon'
+                                  src={icon}
                                   alt={name}
                                 />
                               </td>
                               <td className=' border border-gray-100 px-1 sm:px-3'>
                                 {name}
                               </td>
-                              <td className='text-left px-1 sm:px-3 font-semibold  border border-gray-100'>
-                                {position}
-                              </td>
+
                               <td className='text-left px-1 sm:px-3  border border-gray-100'>
-                                {company}
+                                {website}
                               </td>
                               <td className='text-left px-3  border border-gray-100 flex gap-x-2 items-center h-12'>
                                 <button
@@ -550,4 +499,4 @@ const Speakers = () => {
   );
 };
 
-export default Speakers;
+export default Sponsors;

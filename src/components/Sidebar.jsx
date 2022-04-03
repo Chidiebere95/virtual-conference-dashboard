@@ -189,13 +189,13 @@ const Sidebar = () => {
                   <span className=' flex-1'>create ticket</span>
                 </li>
               </NavLink>
-              <NavLink to='/blog' activeStyle={{ color: 'white' }} exact>
+              <NavLink to='/pages' activeStyle={{ color: 'white' }} exact>
                 <li
                   onClick={() => closeSubmenu()}
                   className=' py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white '
                 >
                   <span className=''>•</span>
-                  <span className=' flex-1'>blog</span>
+                  <span className=' flex-1'>pages</span>
                 </li>
               </NavLink>
               <NavLink to='/speakers' activeStyle={{ color: 'white' }} exact>
@@ -205,6 +205,15 @@ const Sidebar = () => {
                 >
                   <span className=''>•</span>
                   <span className=' flex-1'>speakers</span>
+                </li>
+              </NavLink>
+              <NavLink to='/sponsors' activeStyle={{ color: 'white' }} exact>
+                <li
+                  onClick={() => closeSubmenu()}
+                  className=' py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white '
+                >
+                  <span className=''>•</span>
+                  <span className=' flex-1'>sponsors</span>
                 </li>
               </NavLink>
             </div>

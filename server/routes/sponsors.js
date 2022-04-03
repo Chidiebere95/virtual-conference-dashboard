@@ -7,7 +7,7 @@ const { convertJoiErrorToArray } = require('../utils/helpers');
 
 router.get('/', async (req, res) => {
   try {
-    const sponsors = await Sponsor.find({ published: true });
+    const sponsors = await Sponsor.find();
     res.status(200).send({
       status: 'success',
       message: 'Sponsors retrieved successfully',
@@ -94,6 +94,63 @@ router.delete('/remove', auth, async (req, res) => {
       status: 'success',
       message: 'Sponsor removed successfully',
       data: sponsor,
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+router.put('/edit', auth, async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string().min(1),
+    website: Joi.string().min(1),
+    icon: Joi.string().uri(),
+  });
+  const { id } = req.query;
+  try {
+    //validate user data
+    await schema.validateAsync(req.body, {
+      abortEarly: false,
+    });
+  } catch (err) {
+    const errorMessage = {
+      status: 'failed',
+      error: convertJoiErrorToArray(err.message),
+    };
+    res.status(400).json(errorMessage);
+    return;
+  }
+  try {
+    const sponsor = await Sponsor.findOne({ _id: id });
+
+    if (!sponsor) {
+      res.status(401).send({
+        status: 'failed',
+        message: 'No such sponsors found',
+      });
+      return;
+    }
+    const { name, company, position, avatar } = req.body;
+    if (name === '' && company === '' && position === '' && avatar === '') {
+      res.status(401).send({
+        status: 'failed',
+        message: 'No data to update',
+      });
+
+      return;
+    }
+    const update = {};
+    if (name) update.name = name;
+    if (company) update.company = company;
+    if (position) update.position = position;
+    if (avatar) update.avatar = avatar;
+    await Sponsor.findOneAndUpdate({ _id: id }, update);
+
+    const updatedSponsor = await Sponsor.findOne({ _id: id });
+    res.status(200).send({
+      status: 'success',
+      message: 'Sponsor updated successfully',
+      data: updatedSponsor,
     });
   } catch (err) {
     console.error(err.message);

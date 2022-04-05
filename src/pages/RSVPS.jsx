@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useGlobalContext } from '../context';
-import { FaTrash, FaEdit, FaRegIdBadge, FaCheckCircle } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 import axios from '../utils/axios';
 import md5 from 'md5';
 
@@ -21,7 +21,7 @@ const CreateTicket = () => {
 
     checked,
   };
-  // console.log(formValue);
+
   const handleChange = (e) => {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -48,22 +48,21 @@ const CreateTicket = () => {
     console.log(formValue);
     console.log('create ticket form submitted');
   };
-  const handleReponse = (e, speakerId) => {
+  const handleReponse = (e, rsvpId, confirm) => {
     e.preventDefault();
     const updatePayload = {};
-
-    updatePayload.id = speakerId;
+    updatePayload.id = rsvpId;
+    updatePayload.confirmed = confirm;
 
     axios
-      .put(`/rsvp/confirm`, updatePayload)
+      .post(`/rsvp/confirm`, updatePayload)
       .then((res) => {
-        const tempSpeaker = res.data.data;
-        console.log(tempSpeaker);
+        const tempRsvp = res.data.data;
 
         setRsvps((prevState) => {
           const newsponsors = [
-            ...prevState.filter((item) => item._id !== speakerId),
-            tempSpeaker,
+            ...prevState.filter((item) => item._id !== rsvpId),
+            tempRsvp,
           ];
           return newsponsors;
         });
@@ -73,7 +72,8 @@ const CreateTicket = () => {
         setMessage('');
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
+        alert(err.message);
       });
   };
   const handleDelete = (speakerId) => {
@@ -84,10 +84,9 @@ const CreateTicket = () => {
   };
   useEffect(() => {
     axios.get('/rsvp').then((res) => {
-      console.log(res.data.data);
       setRsvps(res.data.data);
     });
-  }, []);
+  }, [rsvps]);
   return (
     <Layout>
       <div
@@ -192,6 +191,7 @@ const CreateTicket = () => {
                       <tbody>
                         {rsvps.map((item, index) => {
                           const { _id, name, email, message, confirmed } = item;
+
                           return (
                             <tr
                               key={index}
@@ -241,6 +241,23 @@ const CreateTicket = () => {
                                 >
                                   <FaTrash />
                                 </button>
+                                {confirmed ? (
+                                  <button
+                                    onClick={(e) =>
+                                      handleReponse(e, _id, !confirmed)
+                                    }
+                                  >
+                                    ✖️
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={(e) =>
+                                      handleReponse(e, _id, !confirmed)
+                                    }
+                                  >
+                                    ✅
+                                  </button>
+                                )}
                               </td>
                             </tr>
                           );

@@ -74,7 +74,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/confirm', auth, async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id, confirmed } = req.body;
     const user = await Admin.findOne({ _id: req.user });
     if (user && user.admin_level < 1) {
       res.status(401).send({
@@ -83,20 +83,28 @@ router.post('/confirm', auth, async (req, res) => {
       });
       return;
     }
-    const rsvp = await RSVP.findOne({ _id: id, confirmed: true });
+    const rsvp = await RSVP.findOne({ _id: id, confirmed: confirmed });
+
     if (rsvp) {
       res.status(403).send({
         status: 'failed',
         message: 'Reservation already confirmed',
       });
-      return;
+      throw new Error('Reservation already confirmed');
     }
-    await RSVP.findOneAndUpdate({ _id: id }, { confirmed: true });
+    const updatedRSVP = await RSVP.findOneAndUpdate(
+      { _id: id },
+      { confirmed: confirmed },
+    );
+    console.log(updatedRSVP);
     res.status(200).send({
       status: 'success',
+      data: updatedRSVP,
       message: 'RSVP status updated successfully',
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message);
+  }
 });
 
 module.exports = router;

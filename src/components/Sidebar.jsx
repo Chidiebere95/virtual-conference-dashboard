@@ -177,7 +177,7 @@ const Sidebar = () => {
                 </li>
               </NavLink>
               <NavLink
-                to='/create-ticket'
+                to='/manage-rsvps'
                 activeStyle={{ color: 'white' }}
                 exact
               >
@@ -186,7 +186,7 @@ const Sidebar = () => {
                   className=' py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white '
                 >
                   <span className=''>•</span>
-                  <span className=' flex-1'>create ticket</span>
+                  <span className=' flex-1'>manage RSVPS</span>
                 </li>
               </NavLink>
               <NavLink to='/pages' activeStyle={{ color: 'white' }} exact>

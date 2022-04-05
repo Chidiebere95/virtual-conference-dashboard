@@ -60,12 +60,12 @@ const Submenu = () => {
             create event
           </h1>
         </Link>
-        <Link to='/create-ticket'>
+        <Link to='/manage-rsvps'>
           <h1
             onClick={() => closeSubmenuItems()}
             className='pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4'
           >
-            create ticket
+            manage RSVPS
           </h1>
         </Link>
         <Link to='/pages'>

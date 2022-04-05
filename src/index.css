@@ -2,6 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 .border-nav {
   border-top: 0.1px solid rgb(237, 240, 240);
   border-bottom: 0.1px solid rgb(223, 224, 224);

@@ -5,6 +5,7 @@ const adminRoutes = require('./routes/admin');
 const sponsorsRoutes = require('./routes/sponsors');
 const speakersRoutes = require('./routes/speakers');
 const rsvpRoutes = require('./routes/rsvps');
+const pagesRoutes = require('./routes/pages');
 require('dotenv').config();
 
 const app = express();
@@ -18,6 +19,7 @@ app.use('/admin', adminRoutes);
 app.use('/sponsors', sponsorsRoutes);
 app.use('/speakers', speakersRoutes);
 app.use('/rsvp', rsvpRoutes);
+app.use('/pages', pagesRoutes);
 app.listen(PORT, () => {
   console.log('Server listening on port ' + PORT);
 });

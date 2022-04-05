@@ -136,7 +136,6 @@ const Sponsors = () => {
   };
   useEffect(() => {
     axios.get('/sponsors').then((res) => {
-      console.log(res.data.data);
       setSponsors(res.data.data);
     });
   }, []);
@@ -386,112 +385,6 @@ const Sponsors = () => {
                 </div>
               </section>
             </div>
-
-            <section className='mb-8 '>
-              {/* single item */}
-              {/* <div className="rounded bg-white shadow-sm  ">
-              <div className="px-6 pt-5 pb-5 border-b border-gray-100">
-                <h1 className="capitalize text-lg font-normal tracking-wider text-gray-main ">
-                  Sales By Ticket Type
-                </h1>
-              </div>
-              <div className="pt-7 pb-9 px-6 mt-2 ">
-                <table className="table-fixed   text-gray-light-2 text-sm w-full ">
-                  <thead>
-                    <tr className="text-gray-light-2   h-12 uppercase text-xs ">
-                      <th className=" text-left w-2/12  px-0 sm:px-3 border border-gray-100">
-                        order#
-                      </th>
-                      <th className=" text-left w-2/12 px-1 sm:px-3 border border-gray-100">
-                        ticket buyer
-                      </th>
-                      <th className="text-left w-2/12 px-1 sm:px-3 border border-gray-100">
-                        quantity
-                      </th>
-                      <th className=" text-left w-2/12 px-3 border border-gray-100">
-                        price
-                      </th>
-                      <th className=" text-left w-2/12 px-3 border border-gray-100">
-                        date
-                      </th>
-                      <th className=" text-left w-2/12 px-3 border border-gray-100">
-                        payment
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="font-semibold">
-                    <tr className="h-12 capitalize">
-                      <td className=" text-xs sm:text-base  border border-gray-100 capitalize px-0 sm:px-3">
-                        236589
-                      </td>
-                      <td className=" border border-gray-100 px-3">Mr John</td>
-                      <td className="text-left px-3 font-semibold  border border-gray-100">
-                        2
-                      </td>
-                      <td className="text-left px-3  border border-gray-100">
-                        <span className="">$</span>25.21
-                      </td>
-                      <td className="px-3  border border-gray-100">
-                        feb 09,2022
-                      </td>
-                      <td className="px-3  border border-gray-100">Guest</td>
-                    </tr>
-
-                    <tr className="h-12 capitalize">
-                      <td className=" text-xs sm:text-base  border border-gray-100 capitalize px-0 sm:px-3">
-                        236589
-                      </td>
-                      <td className=" border border-gray-100 px-3">Mr John</td>
-                      <td className="text-left px-3 font-semibold  border border-gray-100">
-                        2
-                      </td>
-                      <td className="text-left px-3  border border-gray-100">
-                        <span className="">$</span>25.21
-                      </td>
-                      <td className="px-3  border border-gray-100">
-                        feb 09,2022
-                      </td>
-                      <td className="px-3  border border-gray-100">Guest</td>
-                    </tr>
-
-                    <tr className="h-12 capitalize">
-                      <td className=" text-xs sm:text-base  border border-gray-100 capitalize px-0 sm:px-3">
-                        236589
-                      </td>
-                      <td className=" border border-gray-100 px-3">Mr John</td>
-                      <td className="text-left px-3 font-semibold  border border-gray-100">
-                        2
-                      </td>
-                      <td className="text-left px-3  border border-gray-100">
-                        <span className="">$</span>25.21
-                      </td>
-                      <td className="px-3  border border-gray-100">
-                        feb 09,2022
-                      </td>
-                      <td className="px-3  border border-gray-100">Guest</td>
-                    </tr>
-
-                    <tr className="h-12 capitalize ">
-                      <td className=" text-xs sm:text-base  border border-gray-100 capitalize px-0 sm:px-3">
-                        236589
-                      </td>
-                      <td className=" border border-gray-100 px-3">Mr John</td>
-                      <td className="text-left px-3 font-semibold  border border-gray-100">
-                        2
-                      </td>
-                      <td className="text-left px-3  border border-gray-100">
-                        <span className="">$</span>25.21
-                      </td>
-                      <td className="px-3  border border-gray-100">
-                        feb 09,2022
-                      </td>
-                      <td className="px-3  border border-gray-100">Guest</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div> */}
-            </section>
           </div>
         </div>
       </div>

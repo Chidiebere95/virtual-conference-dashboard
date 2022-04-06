@@ -1,17 +1,17 @@
 const express = require('express');
 const Joi = require('joi');
-const { Page, Route, Admin } = require('../db/Models/index');
+const { Event, Sponsor, Route, Admin } = require('../db/Models/index');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const { convertJoiErrorToArray } = require('../utils/helpers');
 
 router.get('/', async (req, res) => {
   try {
-    const pages = await Page.find();
+    const events = await Event.find();
     res.status(200).send({
       status: 'success',
-      message: 'Pages retrieved successfully',
-      data: pages,
+      message: 'Events retrieved successfully',
+      data: events,
     });
   } catch (err) {
     console.error(err.message);
@@ -19,11 +19,11 @@ router.get('/', async (req, res) => {
 });
 router.get('/:id', async (req, res) => {
   try {
-    const pages = await Page.findOne({ _id: req.params.id });
+    const event = await Event.findOne({ _id: req.params.id });
     res.status(200).send({
       status: 'success',
-      message: 'Pages retrieved successfully',
-      data: pages,
+      message: 'Event retrieved successfully',
+      data: event,
     });
   } catch (err) {
     console.error(err.message);
@@ -33,9 +33,11 @@ router.get('/:id', async (req, res) => {
 router.post('/add', auth, async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(1).required(),
-    path: Joi.string().min(1).required(),
-    content: Joi.string().min(1).required(),
-    thumbnail: Joi.string().uri().required(),
+    start: Joi.date().required(),
+    end: Joi.date().min(1).required(),
+    description: Joi.string().required(),
+    image: Joi.string().uri(),
+    location: Joi.string(),
   });
 
   try {
@@ -52,7 +54,7 @@ router.post('/add', auth, async (req, res) => {
     return;
   }
   try {
-    const { name, path, content, thumbnail } = req.body;
+    const { name, start, end, description, image, location } = req.body;
 
     const user = await Admin.findOne({ _id: req.user });
     if (user.admin_level < 1) {
@@ -61,40 +63,28 @@ router.post('/add', auth, async (req, res) => {
         message: 'Only super admins add Page',
       });
     }
-    const existing_page = await Page.findOne({ name });
-    if (existing_page) {
+    const existing_event = await Event.findOne({ name });
+    if (existing_event) {
       res.status(403).send({
         status: 'failed',
-        message: 'Page already exists in our records',
+        message: 'Event already exists in our records',
       });
       return;
     }
-    const existing_route = await Route.findOne({ path });
-    if (existing_route) {
-      res.status(403).send({
-        status: 'failed',
-        message: 'Route already exists in our records',
-      });
-      return;
-    }
-    const route = new Route({
+
+    const event = new Event({
       name,
-      path,
-      route: `/pages${path}`,
+      start,
+      end,
+      description,
+      image,
+      location,
     });
-    await route.save();
-    const page = new Page({
-      name,
-      path,
-      content,
-      thumbnail,
-      created_by: user._id,
-    });
-    const createdPage = await page.save();
+    const createdEvent = await event.save();
     res.status(200).send({
       status: 'success',
       message: 'Page addedd successfully',
-      data: createdPage,
+      data: createdEvent,
     });
   } catch (err) {
     console.error(err.message);
@@ -108,31 +98,23 @@ router.delete('/remove/:id', auth, async (req, res) => {
     if (user && user.admin_level < 1) {
       res.status(401).send({
         status: 'failed',
-        message: 'Only Super Admins can delete pages',
+        message: 'Only Super Admins can delete events',
       });
     }
-    const page = await Page.findOneAndDelete({ _id: id });
+    const event = await Event.findOneAndDelete({ _id: id });
 
-    if (!page) {
+    if (!event) {
       res.status(401).send({
         status: 'failed',
-        message: 'No such Pages found',
-      });
-      return;
-    }
-    const route = await Route.findOneAndDelete({ name: page.name });
-    if (!route) {
-      res.status(403).send({
-        status: 'failed',
-        message: 'No such Route found',
+        message: 'No such Events found',
       });
       return;
     }
 
     res.status(200).send({
       status: 'success',
-      message: 'Page removed successfully',
-      data: page,
+      message: 'Event removed successfully',
+      data: event,
     });
   } catch (err) {
     console.error(err.message);
@@ -142,9 +124,11 @@ router.delete('/remove/:id', auth, async (req, res) => {
 router.put('/edit', auth, async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(1),
-    path: Joi.string().min(1),
-    content: Joi.string().min(1),
-    thumbnail: Joi.string().uri(),
+    start: Joi.date(),
+    end: Joi.date(),
+    description: Joi.string().min(1),
+    image: Joi.string().uri(),
+    location: Joi.string().min(1),
   });
   const { id } = req.query;
   try {
@@ -161,26 +145,19 @@ router.put('/edit', auth, async (req, res) => {
     return;
   }
   try {
-    const page = await Page.findOne({ _id: id });
+    const event = await Event.findOne({ _id: id });
 
-    if (!page) {
+    if (!event) {
       res.status(401).send({
         status: 'failed',
-        message: 'No such Pages found',
+        message: 'No such Events found',
       });
       return;
     }
-    const route = await Route.findOne({ name: page.name });
-    if (!route) {
+
+    const { name, start, end, description, image, location } = req.body;
+    if (!name && !start && !end && !description && !image && !location) {
       res.status(403).send({
-        status: 'failed',
-        message: 'No such Route found',
-      });
-      return;
-    }
-    const { name, path, content, thumbnail } = req.body;
-    if (!name && !path && !content && !thumbnail) {
-      res.status(401).send({
         status: 'failed',
         message: 'No data to update',
       });
@@ -189,19 +166,19 @@ router.put('/edit', auth, async (req, res) => {
     }
     const update = {};
     if (name) update.name = name;
-    if (path) update.path = path;
-    if (content) update.content = content;
-    if (thumbnail) update.thumbnail = thumbnail;
-    await Page.findOneAndUpdate({ _id: id }, update);
-    await Route.findOneAndUpdate(
-      { name: page.name },
-      { path, route: `/pages${path}`, name },
-    );
-    const updatedPage = await Page.findOne({ _id: id });
+    if (start) update.start = start;
+    if (end) update.end = end;
+    if (description) update.description = description;
+    if (image) update.image = image;
+    if (location) update.location = location;
+    await Event.findOneAndUpdate({ _id: id }, update);
+
+    // TODO: Return all events for easy state update on frontend
+    const updatedEvent = await Event.findOne({ _id: id });
     res.status(200).send({
       status: 'success',
       message: 'Page updated successfully',
-      data: updatedPage,
+      data: updatedEvent,
     });
   } catch (err) {
     console.error(err.message);

@@ -7,7 +7,7 @@ const PageSchema = new Schema({
   content: { type: String, required: true },
   thumbnail: { type: String },
   published: { type: Boolean, default: true },
-  route: { type: Schema.Types.ObjectId, ref: 'route' },
+  route: [{ type: Schema.Types.ObjectId, ref: 'route' }],
   created_by: { type: Schema.Types.ObjectId, ref: 'admin' },
   created_at: {
     type: Date,

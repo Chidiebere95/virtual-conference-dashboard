@@ -92,18 +92,43 @@ router.post('/confirm', auth, async (req, res) => {
       });
       throw new Error('Reservation already confirmed');
     }
-    const updatedRSVP = await RSVP.findOneAndUpdate(
-      { _id: id },
-      { confirmed: confirmed },
-    );
-    console.log(updatedRSVP);
+    await RSVP.findOneAndUpdate({ _id: id }, { confirmed: confirmed });
+    const rsvps = await RSVP.find();
     res.status(200).send({
       status: 'success',
-      data: updatedRSVP,
+      data: rsvps,
       message: 'RSVP status updated successfully',
     });
   } catch (error) {
     console.log(error.message);
+  }
+});
+
+router.delete('/remove/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await Admin.findOne({ id: req.user });
+    if (user && user.admin_level < 1) {
+      res.status(401).send({
+        status: 'failed',
+        message: 'Only Super Admins can delete rsvps',
+      });
+    }
+    const sponsor = await RSVP.findOneAndDelete({ _id: id });
+    if (!sponsor) {
+      res.status(401).send({
+        status: 'failed',
+        message: 'No such rsvps found',
+      });
+      return;
+    }
+    res.status(200).send({
+      status: 'success',
+      message: 'RSVP removed successfully',
+      data: sponsor,
+    });
+  } catch (err) {
+    console.error(err.message);
   }
 });
 

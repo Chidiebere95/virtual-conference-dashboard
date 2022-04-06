@@ -93,6 +93,14 @@ const Submenu = () => {
             Sponsors
           </h1>
         </Link>
+        <Link to='/teams'>
+          <h1
+            onClick={() => closeSubmenuItems()}
+            className='pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4'
+          >
+            teams
+          </h1>
+        </Link>
       </div>
     </aside>
   );

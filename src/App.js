@@ -9,6 +9,7 @@ import Pages from './pages/Pages';
 import Speakers from './pages/Speakers';
 import Sponsors from './pages/Sponsors';
 import Template from './pages/Template';
+import Teams from './pages/Teams';
 
 const token = localStorage.getItem('token');
 if (token) {
@@ -26,6 +27,7 @@ function App() {
           <Route exact path='/pages' component={Pages} />
           <Route exact path='/speakers' component={Speakers} />
           <Route exact path='/sponsors' component={Sponsors} />
+          <Route exact path='/teams' component={Teams} />
           <Route exact path='/*' component={Template} />
         </Switch>
       </Router>

@@ -11,7 +11,7 @@ const TeamSchema = new Schema({
     required: true,
     default: 'Volunteer',
   },
-  img: {
+  avatar: {
     type: String,
     default:
       'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d53?d=identicon&s=600',

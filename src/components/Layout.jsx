@@ -7,7 +7,12 @@ const Layout = ({ children }) => {
     <div>
       <Navbar />
       <Submenu />
-      <div className='mt-20 relative flex'>
+      <div
+        className='mt-20 relative flex'
+        style={{
+          minHeight: 'calc(100vh - 64px)',
+        }}
+      >
         <Sidebar />
         {children}
       </div>

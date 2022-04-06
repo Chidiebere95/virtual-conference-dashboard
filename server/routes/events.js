@@ -35,6 +35,8 @@ router.post('/add', auth, async (req, res) => {
     name: Joi.string().min(1).required(),
     start: Joi.date().required(),
     end: Joi.date().min(1).required(),
+    start_time: Joi.string().required(),
+    end_time: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().uri(),
     location: Joi.string(),
@@ -54,7 +56,16 @@ router.post('/add', auth, async (req, res) => {
     return;
   }
   try {
-    const { name, start, end, description, image, location } = req.body;
+    const {
+      name,
+      start,
+      end,
+      start_time,
+      end_time,
+      description,
+      image,
+      location,
+    } = req.body;
 
     const user = await Admin.findOne({ _id: req.user });
     if (user.admin_level < 1) {
@@ -76,6 +87,8 @@ router.post('/add', auth, async (req, res) => {
       name,
       start,
       end,
+      start_time,
+      end_time,
       description,
       image,
       location,
@@ -126,6 +139,8 @@ router.put('/edit', auth, async (req, res) => {
     name: Joi.string().min(1),
     start: Joi.date(),
     end: Joi.date(),
+    start_time: Joi.string(),
+    end_time: Joi.string(),
     description: Joi.string().min(1),
     image: Joi.string().uri(),
     location: Joi.string().min(1),
@@ -155,7 +170,16 @@ router.put('/edit', auth, async (req, res) => {
       return;
     }
 
-    const { name, start, end, description, image, location } = req.body;
+    const {
+      name,
+      start,
+      end,
+      start_time,
+      end_time,
+      description,
+      image,
+      location,
+    } = req.body;
     if (!name && !start && !end && !description && !image && !location) {
       res.status(403).send({
         status: 'failed',
@@ -168,6 +192,8 @@ router.put('/edit', auth, async (req, res) => {
     if (name) update.name = name;
     if (start) update.start = start;
     if (end) update.end = end;
+    if (start_time) update.start_time = start_time;
+    if (end_time) update.end_time = end_time;
     if (description) update.description = description;
     if (image) update.image = image;
     if (location) update.location = location;

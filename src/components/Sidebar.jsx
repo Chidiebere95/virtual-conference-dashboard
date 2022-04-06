@@ -85,7 +85,14 @@ const Sidebar = () => {
         onMouseOver={handleSubmenu}
         className={`${isSubmenuOpen ? 'hidden ' : 'block h-full  '}`}
       ></div>
-      <div className={`${isSubmenuOpen ? 'block bg-dark ' : 'hidden '}`}>
+      <div
+        className={`${isSubmenuOpen ? 'block bg-dark ' : 'hidden '}`}
+        style={{
+          // position: '-webkit-sticky',
+          position: 'sticky',
+          top: '100px',
+        }}
+      >
         <h1 className='uppercase px-6 pt-4 text-xs text-submenu-purple tracking-widest'>
           navigation
         </h1>

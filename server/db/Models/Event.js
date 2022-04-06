@@ -7,12 +7,20 @@ const EventSchema = new Schema({
     required: true,
     unique: true,
   },
-  start: {
+  starts: {
     type: Date,
     required: true,
   },
-  end: {
+  start_time: {
+    type: String,
+    required: true,
+  },
+  ends: {
     type: Date,
+    required: true,
+  },
+  end_time: {
+    type: String,
     required: true,
   },
   description: {
@@ -24,6 +32,10 @@ const EventSchema = new Schema({
   },
   image: {
     type: String,
+  },
+  published: {
+    type: Boolean,
+    default: false,
   },
   sponsors: [
     {

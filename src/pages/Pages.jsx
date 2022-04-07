@@ -69,6 +69,7 @@ const Blog = () => {
     if (name) updatePayload.name = name;
     if (path) updatePayload.path = path;
     if (imageUrl) updatePayload.thumbnail = imageUrl;
+    if (content) updatePayload.content = content;
 
     axios
       .put(`/pages/edit?id=${speakerId}`, updatePayload)
@@ -267,7 +268,7 @@ const Blog = () => {
                     </thead>
                     <tbody>
                       {pages.map((item, index) => {
-                        const { _id, name, thumbnail, path } = item;
+                        const { _id, name, thumbnail, content, path } = item;
                         return (
                           <tr
                             key={index}
@@ -296,6 +297,7 @@ const Blog = () => {
                                   setEditMode(true);
                                   setIdToEdit(_id);
                                   setName(name);
+                                  setMarkdown(content);
                                 }}
                                 className=''
                               >

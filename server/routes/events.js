@@ -33,15 +33,14 @@ router.get('/:id', async (req, res) => {
 router.post('/add', auth, async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(1).required(),
-    start: Joi.date().required(),
-    end: Joi.date().min(1).required(),
+    starts: Joi.date().required(),
+    ends: Joi.date().min(1).required(),
     start_time: Joi.string().required(),
     end_time: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().uri(),
     location: Joi.string(),
   });
-
   try {
     //validate user data
     await schema.validateAsync(req.body, {
@@ -52,21 +51,22 @@ router.post('/add', auth, async (req, res) => {
       status: 'failed',
       error: convertJoiErrorToArray(err.message),
     };
+    console.log(errorMessage);
     res.status(400).json(errorMessage);
     return;
   }
   try {
     const {
       name,
-      start,
-      end,
+      starts,
+      ends,
       start_time,
       end_time,
       description,
       image,
       location,
     } = req.body;
-
+    console.log(req.body);
     const user = await Admin.findOne({ _id: req.user });
     if (user.admin_level < 1) {
       res.status(401).send({
@@ -85,8 +85,8 @@ router.post('/add', auth, async (req, res) => {
 
     const event = new Event({
       name,
-      start,
-      end,
+      starts,
+      ends,
       start_time,
       end_time,
       description,
@@ -137,8 +137,8 @@ router.delete('/remove/:id', auth, async (req, res) => {
 router.put('/edit', auth, async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(1),
-    start: Joi.date(),
-    end: Joi.date(),
+    starts: Joi.date(),
+    ends: Joi.date(),
     start_time: Joi.string(),
     end_time: Joi.string(),
     description: Joi.string().min(1),
@@ -172,15 +172,24 @@ router.put('/edit', auth, async (req, res) => {
 
     const {
       name,
-      start,
-      end,
+      starts,
+      ends,
       start_time,
       end_time,
       description,
       image,
       location,
     } = req.body;
-    if (!name && !start && !end && !description && !image && !location) {
+    if (
+      !name &&
+      !starts &&
+      !ends &&
+      !start_time &&
+      !end_time &&
+      !description &&
+      !image &&
+      !location
+    ) {
       res.status(403).send({
         status: 'failed',
         message: 'No data to update',
@@ -190,8 +199,8 @@ router.put('/edit', auth, async (req, res) => {
     }
     const update = {};
     if (name) update.name = name;
-    if (start) update.start = start;
-    if (end) update.end = end;
+    if (starts) update.starts = starts;
+    if (ends) update.ends = ends;
     if (start_time) update.start_time = start_time;
     if (end_time) update.end_time = end_time;
     if (description) update.description = description;

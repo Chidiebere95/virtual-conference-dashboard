@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Moment from 'react-moment';
+import {
+  FaShare,
+  FaPen,
+  FaTrash,
+  FaPaper,
+  FaAddressBook,
+} from 'react-icons/fa';
 import Layout from '../components/Layout';
 import { useGlobalContext } from '../context';
 import axios from '../utils/axios';
@@ -15,13 +22,16 @@ const CreateEvent = () => {
   const [endTime, setEndTime] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [published, setPublished] = useState(true);
+  const [editMode, setEditMode] = useState(false);
+  const [idToEdit, setIdToEdit] = useState('');
 
   let formValue = {
     name,
-    starts: eventStarts,
+    starts: new Date(eventStarts),
     start_time: startTime,
-    ends: eventEnds,
+    ends: new Date(eventEnds),
     end_time: endTime,
     description,
     location,
@@ -63,8 +73,55 @@ const CreateEvent = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     getCreateTicketFormData(formValue);
-    console.log(formValue);
-    console.log('create ticket form submitted');
+    axios.post('/events/add', formValue).then((res) => {
+      setEvents((prevEvents) => [...prevEvents, res.data.data]);
+    });
+  };
+  const handleEdit = (e, speakerId) => {
+    e.preventDefault();
+    const updatePayload = {};
+
+    if (name) updatePayload.name = name;
+    if (eventStarts) updatePayload.eventStarts = eventStarts;
+    if (eventEnds) updatePayload.eventEnds = eventEnds;
+    if (startTime) updatePayload.startTime = startTime;
+    if (endTime) updatePayload.endTime = endTime;
+    if (location) updatePayload.location = location;
+    if (description) updatePayload.description = description;
+    if (imageUrl) updatePayload.thumbnail = imageUrl;
+
+    axios
+      .put(`/events/edit?id=${speakerId}`, updatePayload)
+      .then((res) => {
+        const tempSpeaker = res.data.data;
+        console.log(tempSpeaker);
+
+        setEvents((prevState) => {
+          const newpages = [
+            ...prevState.filter((item) => item._id !== speakerId),
+            tempSpeaker,
+          ];
+          return newpages;
+        });
+
+        setStartTime('');
+        setEndTime('');
+        setEventStarts('');
+        setEventEnds('');
+        setName('');
+        setImageUrl('');
+        setDescription('');
+        setLocation('');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleDelete = (speakerId) => {
+    axios.delete(`/events/remove/${speakerId}`).then((res) => {
+      const temppages = events.filter((item) => item._id !== speakerId);
+      setEvents(temppages);
+    });
   };
   useEffect(() => {
     axios.get('/events').then((res) => {
@@ -94,7 +151,7 @@ const CreateEvent = () => {
                         <th className=' text-left w-1/12  px-0 sm:px-3 border border-gray-100'>
                           Date
                         </th>
-                        <th className=' text-left w-3/12 px-1 sm:px-3 border border-gray-100'>
+                        <th className=' text-left w-2/12 px-1 sm:px-3 border border-gray-100'>
                           Event Name
                         </th>
                         <th className='text-left w-1/12 px-1 sm:px-3 border border-gray-100'>
@@ -112,35 +169,65 @@ const CreateEvent = () => {
                       </tr>
                     </thead>
                     <tbody className='font-semibold'>
-                      {events.map((event, id) => {
-                        const { name, start, end, ongoing } = event;
+                      {events.map((event, i) => {
+                        const { _id, created_at, name, start, end, ongoing } =
+                          event;
 
                         return (
-                          <tr className='h-12 capitalize'>
+                          <tr className='h-12 capitalize' key={i}>
                             <td className=' text-xs sm:text-base  border border-gray-100 capitalize px-0 sm:px-3'>
-                              <Moment fromNow>{start}</Moment>
+                              <Moment format='DD MMMM, YYYY'>
+                                {created_at}
+                              </Moment>
                             </td>
                             <td className=' border border-gray-100 px-3'>
                               {name}
                             </td>
                             <td className='text-left px-3 font-semibold  border border-gray-100'>
-                              <Moment format='MMMM/DD/YY'>{start}</Moment>
+                              <Moment format='MMMM DD, YYYY'>{start}</Moment>
                             </td>
                             <td className='text-left px-3  border border-gray-100'>
-                              <Moment format='MMMM/DD/YY'>{end}</Moment>
+                              <Moment format='MMMM DD, YYYY'>{end}</Moment>
                             </td>
                             <td className='px-3  border border-gray-100'>
-                              feb 09,2022
+                              <i>not recorded</i>
                             </td>
                             <td className='px-3  border border-gray-100'>
-                              <button className='bg-blue-300 text-white font-small py-1 px-2 rounded-full'>
-                                share
+                              <button
+                                disabled={true}
+                                dataToggle='tool-tip'
+                                title='Share'
+                                className='bg-blue-300 text-white font-small py-1 px-2 rounded-full'
+                              >
+                                <FaShare />
                               </button>{' '}
-                              <button className='bg-green-400 text-white font-small py-1 px-2 rounded-full'>
-                                edit
+                              <button
+                                dataToggle='tool-tip'
+                                title='Edit'
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setIdToEdit(_id);
+                                  setName(name);
+                                  setEditMode(true);
+                                }}
+                                className='bg-green-400 text-white font-small py-1 px-2 rounded-full'
+                              >
+                                <FaPen />
                               </button>{' '}
-                              <button className='bg-red-400 text-white font-small py-1 px-2 rounded-full'>
-                                unpublish
+                              <button
+                                dataToggle='tool-tip'
+                                title='Delete'
+                                onClick={() => handleDelete(_id)}
+                                className='bg-green-400 text-white font-small py-1 px-2 rounded-full'
+                              >
+                                <FaTrash />
+                              </button>{' '}
+                              <button
+                                dataToggle='tool-tip'
+                                title='Publish'
+                                className='bg-red-400 text-white font-small py-1 px-2 rounded-full'
+                              >
+                                <FaAddressBook />
                               </button>
                             </td>
                           </tr>
@@ -164,7 +251,7 @@ const CreateEvent = () => {
                   <div className='rounded bg-white shadow-sm  '>
                     <div className='px-6 pt-5 pb-5 border-b border-gray-100'>
                       <h1 className='capitalize text-lg font-medium tracking-wider text-gray-main '>
-                        Create Event
+                        {editMode ? 'Edit Event' : 'Create Event'}
                       </h1>
                     </div>
                     <div className='pt-5  px-6 mt-2 text-gray-light-2 mb-'>
@@ -248,7 +335,7 @@ const CreateEvent = () => {
                           location
                         </label>
                         <input
-                          type='time'
+                          type='text'
                           name='location'
                           id='location'
                           value={location}
@@ -286,13 +373,25 @@ const CreateEvent = () => {
                           Accept Terms & Condition
                         </label>
                       </div>
-                      <button
-                        type='submit'
-                        onClick={handleFormSubmit}
-                        className='py-2 px-3 text-sm font-semibold text-white bg-purple-light capitalize hover:bg-purple-light-2 rounded'
-                      >
-                        submit
-                      </button>
+                      {editMode ? (
+                        <button
+                          type='submit'
+                          onClick={(e) => {
+                            handleEdit(e, idToEdit);
+                          }}
+                          className='py-2 px-3 text-sm font-semibold text-white bg-purple-light capitalize hover:bg-purple-light-2 rounded'
+                        >
+                          submit
+                        </button>
+                      ) : (
+                        <button
+                          type='submit'
+                          onClick={handleFormSubmit}
+                          className='py-2 px-3 text-sm font-semibold text-white bg-purple-light capitalize hover:bg-purple-light-2 rounded'
+                        >
+                          submit
+                        </button>
+                      )}
                     </div>
                   </div>
                 </form>

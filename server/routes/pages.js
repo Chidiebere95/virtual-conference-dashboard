@@ -17,9 +17,22 @@ router.get('/', async (req, res) => {
     console.error(err.message);
   }
 });
-router.get('/:id', async (req, res) => {
+// router.get('/id/:id', async (req, res) => {
+//   try {
+//     const pages = await Page.findOne({ _id: req.params.id });
+//     res.status(200).send({
+//       status: 'success',
+//       message: 'Pages retrieved successfully',
+//       data: pages,
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// });
+router.get('/:path', async (req, res) => {
   try {
-    const pages = await Page.findOne({ _id: req.params.id });
+    const { path } = req.params;
+    const pages = await Page.findOne({ path: `/${path}` });
     res.status(200).send({
       status: 'success',
       message: 'Pages retrieved successfully',
@@ -143,11 +156,12 @@ router.put('/edit', auth, async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(1),
     path: Joi.string().min(1),
-    content: Joi.string().min(1),
+    content: Joi.any(),
     thumbnail: Joi.string().uri(),
   });
   const { id } = req.query;
   try {
+    console.log(id);
     //validate user data
     await schema.validateAsync(req.body, {
       abortEarly: false,
@@ -157,6 +171,7 @@ router.put('/edit', auth, async (req, res) => {
       status: 'failed',
       error: convertJoiErrorToArray(err.message),
     };
+    console.log(errorMessage);
     res.status(400).json(errorMessage);
     return;
   }
@@ -192,6 +207,7 @@ router.put('/edit', auth, async (req, res) => {
     if (path) update.path = path;
     if (content) update.content = content;
     if (thumbnail) update.thumbnail = thumbnail;
+    console.log(update.name);
     await Page.findOneAndUpdate({ _id: id }, update);
     await Route.findOneAndUpdate(
       { name: page.name },

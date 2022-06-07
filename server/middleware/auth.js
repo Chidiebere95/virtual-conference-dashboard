@@ -9,6 +9,7 @@ const authMiddleWare = async (req, res, next) => {
         status: 'failed',
         message: 'No Authorization Token Found!',
       });
+      return;
     }
     const token = checkAuthToken.split(' ')[1];
 

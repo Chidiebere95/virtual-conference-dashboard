@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobalContext } from '../context';
-import SimpleMDE from 'react-simplemde-editor';
-import 'easymde/dist/easymde.min.css';
+// import SimpleMDE from 'react-simplemde-editor';
+// import 'easymde/dist/easymde.min.css';
 import { FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
+import Editor from '../components/Editor';
 import Layout from '../components/Layout';
 import axios from '../utils/axios';
+// import { outputHtml } from '../utils/converter';
+
 
 const Blog = () => {
   const { closeSubmenuItems, getBlogFormData } = useGlobalContext();
 
   const [name, setName] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [content, setContent] = useState('');
-  const [path, setPath] = useState('');
+  const [localContent, setLocalContent] = useState('');
   const [checked, setChecked] = useState(true);
   const [markdown, setMarkdown] = useState('');
   const [pages, setPages] = useState([]);
@@ -21,9 +22,8 @@ const Blog = () => {
 
   let formValue = {
     name,
-    thumbnail: imageUrl,
-    content,
-    path,
+    content: JSON.stringify(markdown),
+    path: `/${name.split(' ')[0].toLowerCase()}`,
   };
 
   const handleChange = (e) => {
@@ -36,14 +36,8 @@ const Blog = () => {
     if (name === 'name') {
       setName(value);
     }
-    if (name === 'image url') {
-      setImageUrl(value);
-    }
     if (name === 'content') {
-      setContent(value);
-    }
-    if (name === 'path') {
-      setPath(value);
+      setLocalContent(value);
     }
     if (name === 'check') {
       setChecked(value);
@@ -51,25 +45,24 @@ const Blog = () => {
   };
   const onChangeMarkdown = (md) => {
     setMarkdown(md);
-    setContent(md);
+    setLocalContent(md);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     getBlogFormData(formValue);
+    console.log(formValue)
     axios.post('/pages/add', formValue).then((res) => {
-      console.log(res);
+      console.log(res.data);
     });
     console.log(formValue);
   };
   const handleEdit = (e, speakerId) => {
     e.preventDefault();
     const updatePayload = {};
-
     if (name) updatePayload.name = name;
-    if (path) updatePayload.path = path;
-    if (imageUrl) updatePayload.thumbnail = imageUrl;
-    if (content) updatePayload.content = content;
+    if (localContent) updatePayload.content = localContent;
+    updatePayload.path = `/${name.split(' ')[0].toLowerCase()}`;
 
     axios
       .put(`/pages/edit?id=${speakerId}`, updatePayload)
@@ -85,10 +78,9 @@ const Blog = () => {
           return newpages;
         });
 
-        setContent('');
+        setLocalContent('');
         setName('');
-        setImageUrl('');
-        setPath('');
+ 
       })
       .catch((err) => {
         console.log(err);
@@ -100,11 +92,16 @@ const Blog = () => {
       setPages(temppages);
     });
   };
+  const handleUpdate = (data) => {
+    // const dataToHTML = outputHtml(data.blocks);
+    setMarkdown(data);
+    setLocalContent(data);
+  }
   useEffect(() => {
     axios.get('/pages').then((res) => {
       setPages(res.data.data);
     });
-  }, []);
+  }, [markdown]);
   return (
     <Layout>
       <div
@@ -147,43 +144,13 @@ const Blog = () => {
                       className='p-2 rounded border border-gray-100 w-full'
                     />
                   </div>
-                  <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
-                    <label htmlFor='type' className='capitalize'>
-                      path{' '}
-                    </label>
-
-                    <small>(start with a '/' with no trailing slash)</small>
-
-                    <input
-                      type='text'
-                      name='path'
-                      id='path'
-                      value={path}
-                      onChange={handleChange}
-                      className='p-2 rounded border border-gray-100 w-full'
-                    />
-                  </div>
-
-                  <div className='flex flex-col gap-y-2 mb-4  px-6 pt-5 text-gray-light-2 '>
-                    <label htmlFor='type' className='capitalize'>
-                      image URL
-                    </label>
-                    <input
-                      type='text'
-                      name='image url'
-                      id='image url'
-                      value={imageUrl}
-                      onChange={handleChange}
-                      className='p-2 rounded border border-gray-100 w-full'
-                    />
-                  </div>
 
                   <div className='flex flex-col gap-y-2 flex-1 md:w-full px-6 text-gray-light-2'>
                     <div className='editor__wrapper'>
                       <div className='main__editor__wrapper'>
-                        <SimpleMDE
-                          onChange={onChangeMarkdown}
-                          value={markdown}
+                        <Editor
+                          handleUpdate={handleUpdate}
+                          data={editMode ? localContent : markdown}
                         />
                       </div>
                       <label htmlFor='post_tags'>
@@ -253,7 +220,6 @@ const Blog = () => {
                         <th className=' text-left w-1/12 sm:w- px-0 sm:px-3 border border-gray-100'>
                           #
                         </th>
-                        <th className=' text-left w-1/12 sm:w- px-0 sm:px-3 border border-gray-100'></th>
                         <th className=' text-left w-3/12 sm:w-4/12 sm:w- px-0 sm:px-3 border border-gray-100'>
                           name
                         </th>
@@ -267,8 +233,8 @@ const Blog = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {pages.map((item, index) => {
-                        const { _id, name, thumbnail, content, path } = item;
+                      {pages?.map((item, index) => {
+                        const { _id, name, path, content } = item;
                         return (
                           <tr
                             key={index}
@@ -277,13 +243,7 @@ const Blog = () => {
                             <td className='  sm:text-base  border border-gray-100 capitalize px-0 sm:px-3'>
                               {index + 1}
                             </td>
-                            <td className='  sm:text-base  border border-gray-100 capitalize px-0 sm:px-3'>
-                              <img
-                                className='table-icon icon'
-                                src={thumbnail}
-                                alt={name}
-                              />
-                            </td>
+
                             <td className=' border border-gray-100 px-1 sm:px-3'>
                               {name}
                             </td>
@@ -297,7 +257,8 @@ const Blog = () => {
                                   setEditMode(true);
                                   setIdToEdit(_id);
                                   setName(name);
-                                  setMarkdown(content);
+                                  setLocalContent(JSON.parse(content));
+                                  console.log(content);
                                 }}
                                 className=''
                               >

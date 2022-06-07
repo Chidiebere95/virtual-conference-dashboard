@@ -48,9 +48,7 @@ router.post('/add', auth, async (req, res) => {
     name: Joi.string().min(1).required(),
     path: Joi.string().min(1).required(),
     content: Joi.string().min(1).required(),
-    thumbnail: Joi.string().uri().required(),
   });
-
   try {
     //validate user data
     await schema.validateAsync(req.body, {
@@ -65,7 +63,7 @@ router.post('/add', auth, async (req, res) => {
     return;
   }
   try {
-    const { name, path, content, thumbnail } = req.body;
+    const { name, path, content } = req.body;
 
     const user = await Admin.findOne({ _id: req.user });
     if (user.admin_level < 1) {
@@ -100,7 +98,6 @@ router.post('/add', auth, async (req, res) => {
       name,
       path,
       content,
-      thumbnail,
       created_by: user._id,
     });
     const createdPage = await page.save();

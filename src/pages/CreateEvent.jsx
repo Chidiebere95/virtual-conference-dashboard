@@ -36,7 +36,7 @@ const CreateEvent = () => {
     description,
     location,
   };
-  // console.log(formValue);
+  console.log(formValue);
   const handleChange = (e) => {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -80,7 +80,6 @@ const CreateEvent = () => {
   const handleEdit = (e, speakerId) => {
     e.preventDefault();
     const updatePayload = {};
-
     if (name) updatePayload.name = name;
     if (eventStarts) updatePayload.eventStarts = eventStarts;
     if (eventEnds) updatePayload.eventEnds = eventEnds;

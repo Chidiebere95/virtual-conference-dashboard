@@ -10,6 +10,9 @@ import Speakers from './pages/Speakers';
 import Sponsors from './pages/Sponsors';
 import Template from './pages/Template';
 import Teams from './pages/Teams';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Error from './pages/Error';
 
 const token = localStorage.getItem('token');
 if (token) {
@@ -28,6 +31,9 @@ function App() {
           <Route exact path='/speakers' component={Speakers} />
           <Route exact path='/sponsors' component={Sponsors} />
           <Route exact path='/teams' component={Teams} />
+          <Route exact path='/register' component={Register} />
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/error' component={Error} />
           <Route exact path='/*' component={Template} />
         </Switch>
       </Router>

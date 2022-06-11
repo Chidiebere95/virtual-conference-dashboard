@@ -171,6 +171,32 @@ const Sidebar = () => {
           >
             <div ref={eventLinks} className=''>
               <NavLink
+                to='/register'
+                activeStyle={{ color: 'white' }}
+                exact
+              >
+                <li
+                  onClick={() => closeSubmenu()}
+                  className=' py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white '
+                >
+                  <span className=''>•</span>
+                  <span className=' flex-1'>register</span>
+                </li>
+              </NavLink>
+              <NavLink
+                to='/login'
+                activeStyle={{ color: 'white' }}
+                exact
+              >
+                <li
+                  onClick={() => closeSubmenu()}
+                  className=' py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white '
+                >
+                  <span className=''>•</span>
+                  <span className=' flex-1'>login</span>
+                </li>
+              </NavLink>
+              <NavLink
                 to='/create-event'
                 activeStyle={{ color: 'white' }}
                 exact
@@ -230,6 +256,15 @@ const Sidebar = () => {
                 >
                   <span className=''>•</span>
                   <span className=' flex-1'>teams</span>
+                </li>
+              </NavLink>
+              <NavLink to='/error' activeStyle={{ color: 'white' }} exact>
+                <li
+                  onClick={() => closeSubmenu()}
+                  className=' py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white '
+                >
+                  <span className=''>•</span>
+                  <span className=' flex-1'>error</span>
                 </li>
               </NavLink>
             </div>

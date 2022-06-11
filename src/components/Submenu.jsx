@@ -52,6 +52,23 @@ const Submenu = () => {
         <h1 className='pl-3 py-3 text-white cursor-pointer capitalize text-sm '>
           event
         </h1>
+        <Link to='/register'>
+          <h1
+            onClick={() => closeSubmenuItems()}
+            className='pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4'
+          >
+            register
+          </h1>
+        </Link>
+        <Link to='/login'>
+          <h1
+            onClick={() => closeSubmenuItems()}
+            className='pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4'
+          >
+            login
+          </h1>
+        </Link>
+        
         <Link to='/create-event'>
           <h1
             onClick={() => closeSubmenuItems()}
@@ -76,7 +93,6 @@ const Submenu = () => {
             pages
           </h1>
         </Link>
-
         <Link to='/speakers'>
           <h1
             onClick={() => closeSubmenuItems()}
@@ -99,6 +115,14 @@ const Submenu = () => {
             className='pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4'
           >
             teams
+          </h1>
+        </Link>
+        <Link to='/error'>
+          <h1
+            onClick={() => closeSubmenuItems()}
+            className='pl-3 py-3 text-submenu-purple hover:text-white cursor-pointer capitalize text-sm bg-purple-light-4'
+          >
+            error
           </h1>
         </Link>
       </div>

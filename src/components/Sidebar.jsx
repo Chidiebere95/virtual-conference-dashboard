@@ -258,15 +258,6 @@ const Sidebar = () => {
                   <span className=' flex-1'>teams</span>
                 </li>
               </NavLink>
-              <NavLink to='/error' activeStyle={{ color: 'white' }} exact>
-                <li
-                  onClick={() => closeSubmenu()}
-                  className=' py-4 list-none flex gap-x-3 px-8 capitalize transition-none cursor-pointer hover:text-white '
-                >
-                  <span className=''>•</span>
-                  <span className=' flex-1'>error</span>
-                </li>
-              </NavLink>
             </div>
           </div>
         </div>

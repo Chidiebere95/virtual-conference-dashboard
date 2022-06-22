@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useGlobalContext } from "../context";
 import Layout from "../components/Layout";
+import LayoutForNoNav from "../components/LayoutForNoNav";
 
 const Register = () => {
   const { closeSubmenuItems } = useGlobalContext();
@@ -100,7 +101,7 @@ const Register = () => {
     confirmPasswordContainer.current.style.borderColor = "rgba(243, 244, 246,0.5)";
   }
   return (
-    <Layout>
+    <LayoutForNoNav>
       <div
         onMouseOver={() => closeSubmenuItems()}
         className="ml-16 bg-gray-main flex-1"
@@ -212,7 +213,7 @@ const Register = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </LayoutForNoNav>
   );
 };
 

@@ -109,8 +109,8 @@ const Editor = ({ data, handleUpdate }) => {
 
   return (
     <Fragment>
-      <div id={EDITTOR_HOLDER_ID} className='prose lg:prose-lg'></div>
-      <button
+      <div id={EDITTOR_HOLDER_ID} className='prose-lg lg:prose-lg border-gray-200 border-2'></div>
+      <button 
         onClick={(e) => {
           e.preventDefault();
           ejInstance.current.save().then((outputData) => {

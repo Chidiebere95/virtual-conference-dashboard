@@ -21,6 +21,7 @@ router.get('/', async (req, res) => {
 router.post('/add', auth, async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(1).required(),
+    bio: Joi.string().min(50).max(200).required(),
     company: Joi.string().min(1).required(),
     position: Joi.string().min(1).required(),
     avatar: Joi.string().uri().required(),
@@ -104,6 +105,7 @@ router.delete('/remove', auth, async (req, res) => {
 router.put('/edit', auth, async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().min(1),
+    bio: Joi.string().min(50).max(200),
     company: Joi.string().min(1),
     position: Joi.string().min(1),
     avatar: Joi.string().uri(),
